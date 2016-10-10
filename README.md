@@ -1,6 +1,6 @@
 #S2 LaTeX Renderer
 
-Service for generating nice [SVG pictures from LaTeX equations](https://tex.s2cms.com) for web and [Markdown & LaTeX Online Editor](https://tex.s2cms.ru/page/).
+Service for generating nice [SVG pictures from LaTeX equations](https://tex.s2cms.ru/en/) for web.
 
 ##Requirements
 

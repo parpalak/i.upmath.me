@@ -10,7 +10,7 @@
 
 return [
 	'title'            => 'LaTeX equations for web',
-	'meta-keywords'    => 'LaTeX, equations, SVG-images, formula, convert latex equations to images, markdown latex online editor',
+	'meta-keywords'    => 'LaTeX, equations, SVG-images, formula, convert latex equations to images',
 	'meta-description' => 'Convert LaTeX equations to SVG images ready for publishing on the web.',
 	'header'           => 'LaTeX equations for&nbsp;web',
 	'equation editor'  => 'Equation editor',
@@ -65,7 +65,7 @@ return [
 			<p>When processing pictures, only minimal package set is included. If there is a missing package, please write me a letter. Don’t forget to explain how the package will help other users.</p>
 
 			<h3>Should I type math in this equation editor?</h3>
-			<p>Not necessarily. It’s convenient if you have only few formulas. Type large texts in the <a href="//tex.s2cms.com/page/">editor with LaTeX and Markdown support</a>. Also, I’ve written a script for reach-math sites which allows you to write LaTeX directly in HTML source code.</p>
+			<p>Not necessarily. It’s convenient if you have only few formulas. Type large texts in the <a href="https://upmath.me/">editor with LaTeX and Markdown support</a>. Also, I’ve written a script for reach-math sites which allows you to use LaTeX directly in HTML source code.</p>
 	',
 	'embedding section 1' => '
 			<h2>Embedding into websites</h2>
@@ -91,7 +91,7 @@ return [
 				&copy; 2014 <a href="http://written.ru/">Roman Parpalak</a>.
 				<script>var mailto="roman%"+"40written.ru";document.write('Drop me a line: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
 				&nbsp;
-				<div class="likely" data-url="http://tex.s2cms.com/">
+				<div class="likely" data-url="http://tex.s2cms.ru/en/">
 					<div class="facebook" title="Share">&nbsp;</div>
 					<div class="twitter" data-via="r_parpalak" title="Tweet">&nbsp;</div>
 				</div>

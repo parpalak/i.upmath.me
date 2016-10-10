@@ -10,23 +10,6 @@ module.exports = function(grunt) {
 					'www/js/init_editor.js'
 				],
 				dest: 'www/js/scripts.js'
-			},
-			page: {
-				src: [
-					'www/page/src/js/*.js'
-				],
-				dest: 'www/page/dist/js/scripts.js'
-			},
-			page_vendors: {
-				src: [
-					'bower_components/markdown-it/dist/markdown-it.min.js',
-					'bower_components/markdown-it-sub/dist/markdown-it-sub.min.js',
-					'bower_components/markdown-it-sup/dist/markdown-it-sup.min.js',
-					'bower_components/LDT/lib/TextareaDecorator.js',
-					'bower_components/file-saver.js/FileSaver.js',
-					'www/page/lib/highlight.js/highlight.pack.js'
-				],
-				dest: 'www/page/dist/js/vendors.js'
 			}
 		},
 		uglify: {
@@ -34,14 +17,6 @@ module.exports = function(grunt) {
 				files: {
 					'www/js/scripts.min.js': '<%= concat.main.dest %>'
 				}
-			},
-			page: {
-				src: ['<%= concat.page.dest %>'],
-				dest: 'www/page/dist/js/scripts.min.js'
-			},
-			page_vendors: {
-				src: ['<%= concat.page_vendors.dest %>'],
-				dest: 'www/page/dist/js/vendors.min.js'
 			}
 		},
 		copy: {
@@ -56,34 +31,6 @@ module.exports = function(grunt) {
 						dest: 'www/js/',
 						filter: 'isFile',
 						flatten: true
-					},
-					{
-						expand: true,
-						src: [
-							'bower_components/file-saver.js/FileSaver.js',
-							'bower_components/markdown-it/dist/markdown-it.min.js',
-							'bower_components/markdown-it-sub/dist/markdown-it-sub.min.js',
-							'bower_components/markdown-it-sup/dist/markdown-it-sup.min.js'
-						],
-						dest: 'www/page/dist/js/',
-						filter: 'isFile',
-						flatten: true
-					},
-					{
-						expand: true,
-						src: [
-							'bower_components/LDT/lib/TextareaDecorator.css'
-						],
-						dest: 'www/page/dist/css/',
-						flatten: true
-					},
-					{
-						expand: true,
-						src: [
-							'bower_components/LDT/lib/TextareaDecorator.js'
-						],
-						dest: 'www/page/dist/js/',
-						flatten: true
 					}
 				]
 			}
@@ -95,14 +42,6 @@ module.exports = function(grunt) {
 					'bower_components/ilyabirman-likely/release/likely.css'
 				],
 				dest: 'www/css/style.min.css'
-			},
-			page: {
-				src: [
-					'bower_components/LDT/lib/TextareaDecorator.css',
-					'www/page/lib/highlight.js/solarized-light.css',
-					'www/page/src/css/editor.css'
-				],
-				dest: 'www/page/dist/css/style.min.css'
 			}
 		},
 		fingerprint: {
@@ -113,18 +52,6 @@ module.exports = function(grunt) {
 				],
 				filename: 'fingerprint.php',
 				template: "<?php define('FINGERPRINT', '<%= fingerprint %>'); ?>"
-			},
-			page: {
-				src: 'www/page/dist/js/scripts.min.js',
-				filename: 'www/page/dist/js/scripts.min.js.md5'
-			},
-			page_vendors: {
-				src: 'www/page/dist/js/vendors.min.js',
-				filename: 'www/page/dist/js/vendors.min.js.md5'
-			},
-			page_css: {
-				src: 'www/page/dist/css/style.min.css',
-				filename: 'www/page/dist/css/style.min.css.md5'
 			}
 		},
 		shell: {
