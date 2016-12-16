@@ -62,13 +62,6 @@ module.exports = function(grunt) {
 					'gzip -cn6 www/css/style.min.css > www/css/style.min.css.gz'
 				].join(' && ')
 			},
-			gzip_page: {
-				command: [
-					'gzip -cn6 <%= cssmin.page.dest %> > <%= cssmin.page.dest %>.gz',
-					'gzip -cn6 <%= uglify.page.dest %> > <%= uglify.page.dest %>.gz',
-					'gzip -cn6 <%= uglify.page_vendors.dest %> > <%= uglify.page_vendors.dest %>.gz'
-				].join(' && ')
-			},
 			gzipPublic: {
 				command: 'gzip -cn6 www/latex.js > www/latex.js.gz'
 			}
