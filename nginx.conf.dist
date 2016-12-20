@@ -19,6 +19,9 @@ server {
 		gzip_vary     on;
 		gzip_proxied  expired no-cache no-store private auth;
 
+		add_header 'Access-Control-Allow-Origin' '*' always;
+		add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS' always;
+		
 		#expires 1d;
 
 		set_by_lua $file_path '
@@ -42,13 +45,13 @@ server {
 		gzip_proxied  expired no-cache no-store private auth;
 	}
 
-    location /css {
+	location /css {
 		gzip_static   on;
 		gzip_vary     on;
 		gzip_proxied  expired no-cache no-store private auth;
-    }
+	}
 
-    location /js {
+	location /js {
 		gzip_static   on;
 		gzip_vary     on;
 		gzip_proxied  expired no-cache no-store private auth;
@@ -58,9 +61,9 @@ server {
 		index           index.html index.php;
 	}
 
-    location /g/ {
-        try_files       $uri $uri/ /index.php;
-    }
+	location /g/ {
+		try_files       $uri $uri/ /index.php;
+	}
 
 	location ~ \.php$ {
 		try_files       $uri =404;
