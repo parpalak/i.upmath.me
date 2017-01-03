@@ -278,9 +278,9 @@ class Renderer implements RendererInterface
 		// $svg = '...<!--start 19.8752 31.3399 -->...';
 
 		//                                    x        y
-		$hasStart = preg_match('#<!--start ([\d.]+) ([\d.]+) -->#', $svg, $matchStart);
+		$hasStart = preg_match('#<!--start (-?[\d\.]+) (-?[\d\.]+) -->#', $svg, $matchStart);
 		//                                  x        y        w        h
-		$hasBbox = preg_match('#<!--bbox ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+) -->#', $svg, $matchBbox);
+		$hasBbox = preg_match('#<!--bbox (-?[\d\.]+) (-?[\d\.]+) (-?[\d\.]+) (-?[\d\.]+) -->#', $svg, $matchBbox);
 
 		if ($hasStart && $hasBbox) {
 			// SVG contains info about image size and baseline position.
