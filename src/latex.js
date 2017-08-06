@@ -112,7 +112,8 @@
 								if (/[,.;!?)] /.test(after)) {
 									as[i + 1] = as[i + 1].substring(1);
 
-									var nobr = d.createElement('nobr');
+									var nobr = d.createElement('span');
+									nobr.style.whiteSpace = 'pre';
 									nobr.appendChild(s);
 									s = nobr;
 									s.appendChild(d.createTextNode(after.substring(0, 1)));
