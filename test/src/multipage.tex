@@ -1,0 +1,40 @@
+\begin{sequencediagram}
+\newthread[red]{M}{Interface}{}
+\newinst[1]{DB}{DB}{}
+\newinst[1]{Auth}{Auth}{}
+\newinst[1]{m_list}{ESB Listener}{}
+\newthread[green]{ESB}{ESB}{}
+%
+\begin{sdblock}{Add user, sync DB error}{}
+\begin{call}{M}{PUT /user}{Auth}{user id}
+\mess{Auth}{user.add}{ESB}
+\end{call}
+\postlevel
+\begin{call}{M}{\shortstack{INSERT user}}{DB}{DB Error}
+\end{call}
+\prelevel\prelevel
+\begin{messcall}{ESB}{user.add}{m_list}
+   \setthreadbias{southeast}
+   \begin{call}{m_list}{SELECT user}{DB}{Not found}
+   \end{call}
+   \begin{call}{m_list}{SELECT user}{DB}{Not found}
+   \end{call}
+   \begin{call}{m_list}{SELECT user}{DB}{Not found}
+   \end{call}
+   \begin{call}{m_list}{SELECT user}{DB}{Not found}
+   \end{call}
+   \begin{call}{m_list}{SELECT user}{DB}{Not found}
+   \end{call}
+   \begin{call}{m_list}{SELECT user}{DB}{Not found}
+   \end{call}
+   \begin{call}{m_list}{SELECT user}{DB}{Not found}
+   \end{call}
+   \begin{call}{m_list}{SELECT user}{DB}{Not found}
+   \end{call}
+   \postlevel
+   \begin{call}{m_list}{\shortstack{After 5 min:\\ INSERT user, account}}{DB}{}
+   \end{call}
+   \setthreadbias{center}
+\end{messcall}
+\end{sdblock}
+\end{sequencediagram}

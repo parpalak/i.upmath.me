@@ -5,6 +5,7 @@
 
 ?>
 \documentclass[11pt]{article}
+\usepackage[paperwidth=180in,paperheight=180in]{geometry}
 \batchmode
 \usepackage{amsmath}
 \usepackage{amssymb}
