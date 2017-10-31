@@ -38,6 +38,7 @@ class Templater implements TemplaterInterface
 			'tikzcd'          => 'tikz-cd',
 			'tikzpicture'     => 'tikz',
 			'sequencediagram' => 'pgf-umlsd',
+			'prooftree'       => 'bussproofs',
 			'align'           => '', // just turns math mode off
 		];
 
@@ -54,6 +55,7 @@ class Templater implements TemplaterInterface
 		$test_command = [
 			'\\addplot'      => 'pgfplots',
 			'\\smartdiagram' => 'smartdiagram',
+			'\\DisplayProof' => 'bussproofs',
 		];
 
 		foreach ($test_command as $command => $env) {
@@ -71,7 +73,7 @@ class Templater implements TemplaterInterface
 		}
 
 		$extraPackages[] = new Tpl\Package('inputenc', ['utf8']);
-		if (preg_match('#[А-Яа-я]#u', $formula)) {
+		if (preg_match('#[А-Яа-яЁё]#u', $formula)) {
 			$extraPackages[] = new Tpl\Package('babel', ['russian']);
 		}
 
