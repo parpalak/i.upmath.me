@@ -9,6 +9,7 @@
 \batchmode
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{stmaryrd}
 \newcommand{\R}{\mathbb{R}}
 <?php
 if (!empty($extraPackages)) {
