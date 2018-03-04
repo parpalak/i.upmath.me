@@ -37,6 +37,7 @@ class Templater implements TemplaterInterface
 			'eqnarray'        => 'eqnarray',
 			'tikzcd'          => 'tikz-cd',
 			'tikzpicture'     => 'tikz',
+			'circuitikz'      => 'circuitikz',
 			'sequencediagram' => 'pgf-umlsd',
 			'prooftree'       => 'bussproofs',
 			'align'           => '', // just turns math mode off
