@@ -1,7 +1,6 @@
 /**
  * Replaces LaTeX formulas by pictures
- * Inspired by http://www.codecogs.com/latex/htmlequations.php
- * @copyright 2012-2016 Roman Parpalak
+ * @copyright 2012-2018 Roman Parpalak
  */
 
 (function (w, d) {
@@ -22,9 +21,13 @@
 			pre = w3 ? '' : 'on',
 
 			init = function (e) {
-				if (e.type == 'readystatechange' && d.readyState != 'complete') return;
-				(e.type == 'load' ? w : d)[rem](pre + e.type, init, false);
-				if (!done && (done = !0)) fn.call(w, e.type || e);
+				if (e.type === 'readystatechange' && d.readyState !== 'complete') {
+					return;
+				}
+				(e.type === 'load' ? w : d)[rem](pre + e.type, init, false);
+				if (!done && (done = !0)) {
+					fn.call(w, e.type || e);
+				}
 			},
 
 			poll = function () {
@@ -37,16 +40,17 @@
 				init('poll');
 			};
 
-		if (d.readyState == 'complete') {
+		if (d.readyState === 'complete') {
 			fn.call(w, 'lazy');
-		}
-		else {
+		} else {
 			if (d.createEventObject && root.doScroll) {
 				try {
 					top = !w.frameElement;
 				} catch (e) {
 				}
-				if (top) poll();
+				if (top) {
+					poll();
+				}
 			}
 			d[add](pre + 'DOMContentLoaded', init, !1);
 			d[add](pre + 'readystatechange', init, !1);
@@ -57,10 +61,11 @@
 	});
 
 	function image(f, c) {
-		var s = (ext == 'svg'),
+		var s = (ext === 'svg'),
 			i = d.createElement(s ? 'embed' : 'img');
 
 		i.setAttribute('src', url + '/' + ext + '/' + encodeURIComponent(f));
+		i.setAttribute('class', 'latex-' + ext);
 		s && i.setAttribute('type', 'image/svg+xml');
 		i.setAttribute('style', s ? 'width:0.2em; height:0.2em;' : 'vertical-align:middle; border:0; position: relative; z-index:-1; top:-4px;');
 		!s && i.setAttribute('alt', f);
@@ -76,17 +81,16 @@
 			var eCur = eNext, sNn = eCur.nodeName;
 			eNext = eNext.nextSibling;
 
-			if (eCur.nodeType == 1 && sNn != 'SCRIPT' && sNn != 'TEXTAREA' && sNn != 'EMBED') {
+			if (eCur.nodeType === 1 && sNn !== 'SCRIPT' && sNn !== 'TEXTAREA' && sNn !== 'EMBED') {
 				processTree(eCur);
-			}
-			else if (eCur.nodeType == 3) {
+			} else if (eCur.nodeType === 3) {
 				var as = (' ' + eCur.nodeValue + ' ').split(/\$\$/g),
 					n = as.length, i, s;
 
-				if (n == 3 &&
+				if (n === 3 &&
 					(/^[ \t]$/.test(as[0])) &&
 					(/(?:[ \t]*\([ \t]*\S+[ \t]*\))?[ \t]*/.test(as[2])) &&
-					eItem.tagName == 'P' && eItem.childNodes.length <= 2
+					eItem.tagName === 'P' && eItem.childNodes.length <= 2
 				) {
 					s = image(as[1], 1);
 					eItem.insertBefore(s, eCur);
@@ -98,8 +102,7 @@
 
 					eItem.insertBefore(eSpan, eCur);
 					eItem.removeChild(eCur);
-				}
-				else if (n > 2) {
+				} else if (n > 2) {
 					as[0] = as[0].substring(1);
 					as[n - 1] = as[n - 1].substring(0, as[n - 1].length - 1);
 
@@ -118,12 +121,10 @@
 									s = nobr;
 									s.appendChild(d.createTextNode(after.substring(0, 1)));
 								}
-							}
-							else {
+							} else {
 								s = d.createTextNode('$$' + as[i]);
 							}
-						}
-						else {
+						} else {
 							s = d.createTextNode(as[i]);
 						}
 
@@ -141,7 +142,7 @@
 	var ao;
 
 	w.addEventListener && w.addEventListener('message', function (e) {
-		if (e.origin.replace(/^https?:/, '') != ntwPath) {
+		if (e.origin.replace(/^https?:/, '') !== ntwPath) {
 			return;
 		}
 
@@ -156,7 +157,7 @@
 		s = s.join('|');
 
 		for (; i-- ;) {
-			if (ao[i].src == s || decodeURIComponent(ao[i].src) == s) {
+			if (ao[i].src === s || decodeURIComponent(ao[i].src) === s) {
 				ao[i].setAttribute('style', 'width:' + x + 'pt; height:' + y + 'pt; vertical-align:' + (ao[i].isCentered ? 'top;' : (-v) + 'pt;'));
 			}
 		}
