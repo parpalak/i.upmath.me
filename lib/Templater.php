@@ -74,13 +74,12 @@ class Templater implements TemplaterInterface
 			$extraPackages[] = new Tpl\Package('xy', ['all']);
 		}
 
-		$extraPackages[] = new Tpl\Package('inputenc', ['utf8']);
 		if (preg_match('#[А-Яа-яЁё]#u', $formula)) {
 			$extraPackages[] = new Tpl\Package('babel', ['russian']);
 		}
 
 		// Other setup
-		if (substr($formula, 0, 7) == '\\inline') {
+		if (0 === strpos($formula, '\\inline')) {
 			$formula = '\\textstyle ' . substr($formula, 7);
 		}
 
@@ -88,6 +87,10 @@ class Templater implements TemplaterInterface
 
 		ob_start();
 		include $this->dir . $tpl . '.php';
+		$documentContent = ob_get_clean();
+
+		ob_start();
+		include $this->dir . 'document.php';
 		$text = ob_get_clean();
 
 		return new Formula($text, $isMathMode);

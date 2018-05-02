@@ -1,0 +1,80 @@
+<?php
+
+/** @var string $documentContent */
+/** @var \S2\Tex\Tpl\PackageInterface[] $extraPackages */
+
+?>
+\documentclass[11pt]{article}
+\usepackage[paperwidth=180in,paperheight=180in]{geometry}
+\batchmode
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\newcommand{\R}{\mathbb{R}}
+
+\usepackage[verbose]{newunicodechar}
+
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{Γ}{\ensuremath{\Gamma}}
+\newunicodechar{γ}{\ensuremath{\gamma}}
+\newunicodechar{λ}{\ensuremath{\lambda}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{ψ}{\ensuremath{\psi}}
+\newunicodechar{ϕ}{\ensuremath{\varphi}}
+\newunicodechar{ᵢ}{\ensuremath{{}_{i}}}
+\newunicodechar{₀}{\ensuremath{{}_{0}}}
+\newunicodechar{₁}{\ensuremath{{}_{1}}}
+\newunicodechar{₂}{\ensuremath{{}_{2}}}
+\newunicodechar{₃}{\ensuremath{{}_{3}}}
+\newunicodechar{₄}{\ensuremath{{}_{4}}}
+\newunicodechar{₅}{\ensuremath{{}_{5}}}
+\newunicodechar{₆}{\ensuremath{{}_{6}}}
+\newunicodechar{₇}{\ensuremath{{}_{7}}}
+\newunicodechar{₈}{\ensuremath{{}_{8}}}
+\newunicodechar{₉}{\ensuremath{{}_{9}}}
+\newunicodechar{ₙ}{\ensuremath{{}_{n}}}
+\newunicodechar{ℓ}{\ensuremath{\ell}}
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\newunicodechar{⇒}{\ensuremath{\supset}}
+\newunicodechar{⇔}{\ensuremath{\Leftrightarrow}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{∙}{\ensuremath{\bullet}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{∼}{\ensuremath{\sim}}
+\newunicodechar{≠}{\ensuremath{\neq}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{⊃}{\ensuremath{\supset}}
+\newunicodechar{⊕}{\ensuremath{\oplus}}
+\newunicodechar{⊖}{\ensuremath{\ominus}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+\newunicodechar{⊤}{\ensuremath{\top}}
+\newunicodechar{⊥}{\ensuremath{\bot}}
+\newunicodechar{⊻}{\ensuremath{\veebar}}
+\newunicodechar{⟝}{\ensuremath{\vdash}}
+\newunicodechar{⬓}{\ensuremath{\square}}
+\newunicodechar{Σ}{\ensuremath{\sum}}
+\newunicodechar{Π}{\ensuremath{\prod}}
+\newunicodechar{ⱼ}{\ensuremath{{}_{j}}}
+
+<?php
+if (!empty($extraPackages)) {
+	foreach ($extraPackages as $package) {
+		echo $package->getCode(), "\n";
+	}
+}
+?>
+
+\pagestyle{empty}
+
+\setlength{\topskip}{0pt}
+\setlength{\parindent}{0pt}
+\setlength{\abovedisplayskip}{0pt}
+\setlength{\belowdisplayskip}{0pt}
+
+\begin{document}
+<?php echo $documentContent; ?>
+\end{document}
