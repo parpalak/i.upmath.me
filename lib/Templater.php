@@ -47,7 +47,7 @@ class Templater implements TemplaterInterface
 			if (strpos($formula, '\\begin{' . $command . '}') !== false || strpos($formula, '\\begin{' . $command . '*}') !== false) {
 				$isMathMode = false;
 				if ($env) {
-					$extraPackages[] = new Tpl\Package($env);
+					$extraPackages[$env] = new Tpl\Package($env);
 				}
 			}
 		}
@@ -64,18 +64,32 @@ class Templater implements TemplaterInterface
 			if (strpos($formula, $command) !== false) {
 				$isMathMode = false; // TODO make an option
 				if ($env) {
-					$extraPackages[] = new Tpl\Package($env);
+					$extraPackages[$env] = new Tpl\Package($env);
 				}
+			}
+		}
+
+		// Same as above but for inline commands inside math mode
+		$test_command = [
+			'\\color'               => 'xcolor',
+			'\\textcolor'           => 'xcolor',
+			'\\colorbox'            => 'xcolor',
+			'\\pagecolor'           => 'xcolor',
+		];
+
+		foreach ($test_command as $command => $env) {
+			if (strpos($formula, $command) !== false) {
+				$extraPackages[$env] = new Tpl\Package($env);
 			}
 		}
 
 		// Custom rules
 		if (strpos($formula, '\\xymatrix') !== false || strpos($formula, '\\begin{xy}') !== false) {
-			$extraPackages[] = new Tpl\Package('xy', ['all']);
+			$extraPackages['xy'] = new Tpl\Package('xy', ['all']);
 		}
 
 		if (preg_match('#[А-Яа-яЁё]#u', $formula)) {
-			$extraPackages[] = new Tpl\Package('babel', ['russian']);
+			$extraPackages['babel'] = new Tpl\Package('babel', ['russian']);
 		}
 
 		// Other setup
