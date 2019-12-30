@@ -15,6 +15,6 @@
     "jquery": "~2.1.4",
     "autosize": "~3.0.6",
     "Stickyfill": "~1.1.1",
-    "ilyabirman-likely": "~2.0.4"
+    "ilyabirman-likely": "https://github.com/NikolayRys/Likely.git#acd1ab4"
   }
 }
