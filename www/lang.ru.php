@@ -22,7 +22,7 @@ return [
 	'link-s2'          => '&larr; Движок S2',
 	'link-faq'         => 'Вопросы и ответы',
 	'link-install'     => 'Установка на сайты',
-	'page-editor'      => 'Upmath: редактор математических текстов',
+	'page-editor'      => 'Upmath: редактор текстов',
 	'samples'          => [
 		'integrals' => 'Интегралы, корни и рамки',
 		'limits'    => 'Пределы и суммы',
