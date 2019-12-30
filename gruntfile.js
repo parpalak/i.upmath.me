@@ -71,17 +71,13 @@ module.exports = function(grunt) {
 				src: ['src/latex.js'],
 				dest: 'www/latex.js',
 				replacements: [{
-					from: 'tex.s2cms.ru',
-					to: __dirname.split('/').pop()
+					from: 'i.upmath.me',
+					to: function (matchedWord, index, fullText, regexMatches) {
+						const host = __dirname.split('/').pop();
+
+						return host !== 'tex.s2cms.ru' ? host : 'i.upmath.me';
+					}
 				}]
-			}
-		},
-		"file-creator": {
-			"basic": {
-				"host.php": function(fs, fd, done) {
-					fs.writeSync(fd, "<?php define('TEX_HOST', '" + __dirname.split('/').pop() + "'); ?>");
-					done();
-				}
 			}
 		},
 		watch: {
@@ -109,7 +105,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-fingerprint');
 	grunt.loadNpmTasks('grunt-shell');
 	grunt.loadNpmTasks('grunt-text-replace');
-	grunt.loadNpmTasks('grunt-file-creator');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.registerTask('default', [
@@ -119,7 +114,6 @@ module.exports = function(grunt) {
 		'cssmin',
 		'replace',
 		'shell',
-		'fingerprint',
-		'file-creator'
+		'fingerprint'
 	]);
 };

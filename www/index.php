@@ -8,19 +8,15 @@ if (!defined('FINGERPRINT')) {
 	define('FINGERPRINT', '');
 }
 
-if (!defined('TEX_HOST')) {
-	define('TEX_HOST', 'tex.s2cms.ru');
-}
-
-$service_url = '//' .  TEX_HOST . '/';
+$service_url = '//i.upmath.me/';
 $script_url = $service_url.'latex.js';
 
-$lang = $_SERVER['HTTP_HOST'] == 'tex.s2cms.ru' ? 'ru' : 'en';
+$lang = $_SERVER['HTTP_HOST'] === 'tex.s2cms.ru' ? 'ru' : 'en';
 $i18n = include 'lang.' . $lang . '.php';
 
 $lang_links = [
 	'ru' => '//tex.s2cms.ru/',
-	'en' => '//tex.s2cms.com/',
+	'en' => '//i.upmath.me/',
 ];
 
 function __ ($key)
@@ -72,8 +68,7 @@ foreach ($lang_links as $link_lang => $link_url)
 	<div class="header sticky">
 		<div class="section-content header-content">
 			<div class="nav">
-				<?php if ($lang == 'ru') { ?><a class="nav-item" href="//s2cms.ru/"><span class="nav-link"><?php echo __('link-s2'); ?></span></a><?php } ?><!--
-			 --><a class="nav-item inside" href="#editor"><span class="nav-link"><?php echo __('equation editor'); ?></span></a><!--
+				<a class="nav-item inside" href="#editor"><span class="nav-link"><?php echo __('equation editor'); ?></span></a><!--
 			 --><a class="nav-item inside" href="#samples"><span class="nav-link"><?php echo __('examples'); ?></span></a><!--
 			 --><a class="nav-item inside" href="#faq"><span class="nav-link"><?php echo __('link-faq'); ?></span></a><!--
 			 --><a class="nav-item inside" href="#embedding"><span class="nav-link"><?php echo __('link-install'); ?></span></a><!--

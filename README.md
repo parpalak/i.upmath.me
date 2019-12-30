@@ -1,6 +1,6 @@
 # S2 LaTeX Renderer
 
-Service for generating nice [SVG pictures from LaTeX equations](https://tex.s2cms.com/) for web. You can try it in action in the [Markdown and LaTeX online editor](https://upmath.me).
+Service for generating nice [SVG pictures from LaTeX equations](https://i.upmath.me/) for web. You can try it in action in the [Markdown and LaTeX online editor](https://upmath.me).
 
 ## Requirements
 

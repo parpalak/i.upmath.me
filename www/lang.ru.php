@@ -22,7 +22,7 @@ return [
 	'link-s2'          => '&larr; Движок S2',
 	'link-faq'         => 'Вопросы и ответы',
 	'link-install'     => 'Установка на сайты',
-	'page-editor'      => 'Редактор текстов',
+	'page-editor'      => 'Upmath: редактор математических текстов',
 	'samples'          => [
 		'integrals' => 'Интегралы, корни и рамки',
 		'limits'    => 'Пределы и суммы',
@@ -53,8 +53,8 @@ return [
 
 			<h3>Как формулы превращаются в&nbsp;картинки?</h3>
 			<p>
-				На&nbsp;сервере установлен <a href="http://ru.wikipedia.org/wiki/TeX_Live">Tex Live</a>.
-				Он работает <a href="http://written.ru/articles/technologies/site_building/latex_for_web">в&nbsp;связке с&nbsp;современными веб-технологиями</a>.
+				На&nbsp;сервере установлен <a href="https://ru.wikipedia.org/wiki/TeX_Live">Tex Live</a>.
+				Он работает <a href="https://written.ru/articles/technologies/site_building/latex_for_web">в&nbsp;связке с&nbsp;современными веб-технологиями</a>.
 			</p>
 
 			<h3>Кириллица в формулах не отображается!</h3>
@@ -84,13 +84,10 @@ return [
 
 			<p>
 				На этом сервисе работает <a href="http://susy.written.ru/">блог о&nbsp;теоретической физике</a>.
-				Если вы хотите сделать похожий сайт с&nbsp;математическими текстами, и&nbsp;не&nbsp;знаете, с&nbsp;чего начать,
-				вам может пригодиться <a href="//s2cms.ru/">движок S2</a>.
-				Он <a href="//s2cms.ru/extension/s2_latex">умеет подключаться</a> к&nbsp;этому сервису без&nbsp;дополнительной настройки.
 			</p>
 	',
 	'copyright section' => <<<TEXT
-				&copy; <a href="http://written.ru/">Роман Парпалак</a>, 2014.
+				&copy; <a href="https://written.ru/">Роман Парпалак</a>, 2014&ndash;2019.
 				<script>var mailto="roman%"+"40written.ru";document.write('Пишите: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
 				&nbsp; &nbsp;
 				<div class="likely" data-url="http://tex.s2cms.ru/">

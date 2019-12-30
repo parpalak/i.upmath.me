@@ -2,7 +2,7 @@
 /**
  * English interface
  *
- * @copyright 2015 Roman Parpalak
+ * @copyright 2015-2019 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   S2 Latex Service
  * @link      http://tex.s2cms.ru
@@ -13,7 +13,7 @@ return [
 	'meta-keywords'    => 'LaTeX, equations, SVG-images, formula, convert latex equations to images',
 	'meta-description' => 'Convert LaTeX equations to SVG images ready for publishing on the web.',
 	'header'           => 'LaTeX equations for&nbsp;web',
-	'equation editor'  => 'Equation editor',
+	'equation editor'  => 'Online editor',
 	'formula in latex' => 'LaTeX expression',
 	'image URL'        => 'Image&nbsp;URL:&nbsp;',
 	'examples'         => 'Examples',
@@ -22,7 +22,7 @@ return [
 	'link-s2'          => '&larr; S2 CMS',
 	'link-faq'         => 'FAQ',
 	'link-install'     => 'Embedding',
-	'page-editor'      => 'Math text editor',
+	'page-editor'      => 'Upmath: Markdown & LaTeX',
 	'samples'          => [
 		'integrals' => 'Integrals, roots and borders',
 		'limits'    => 'Limits and sums',
@@ -57,7 +57,7 @@ return [
 
 			<h3>How is the math converted into pictures?</h3>
 			<p>
-				There is <a href="http://en.wikipedia.org/wiki/TeX_Live">Tex Live</a> installed on the server.
+				There is <a href="https://en.wikipedia.org/wiki/TeX_Live">Tex Live</a> installed on the server.
 				It has been set up to work with modern web technologies.
 			</p>
 
@@ -65,7 +65,7 @@ return [
 			<p>When processing pictures, only minimal package set is included. If there is a missing package, please write me a letter. Don’t forget to explain how the package will help other users.</p>
 
 			<h3>Should I type math in this equation editor?</h3>
-			<p>Not necessarily. It’s convenient if you have only few formulas. Type large texts in the <a href="https://upmath.me/">editor with LaTeX and Markdown support</a>. Also, I’ve written a script for reach-math sites which allows you to use LaTeX directly in HTML source code.</p>
+			<p>Not necessarily. It’s convenient if you have only few formulas. Type large texts in the <a href="https://upmath.me/">Upmath editor with LaTeX and Markdown support</a>. Also, I’ve written a script for reach-math sites which allows you to use LaTeX directly in HTML source code.</p>
 	',
 	'embedding section 1' => '
 			<h2>Embedding into websites</h2>
@@ -88,10 +88,10 @@ return [
 			</p>
 	',
 	'copyright section' => <<<TEXT
-				&copy; 2014 <a href="http://written.ru/">Roman Parpalak</a>.
+				&copy; 2014&ndash;2019 <a href="https://written.ru/">Roman Parpalak</a>.
 				<script>var mailto="roman%"+"40written.ru";document.write('Drop me a line: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
 				&nbsp;
-				<div class="likely" data-url="http://tex.s2cms.ru/en/">
+				<div class="likely" data-url="https://i.upmath.me/">
 					<div class="facebook" title="Share">&nbsp;</div>
 					<div class="twitter" data-via="r_parpalak" title="Tweet">&nbsp;</div>
 				</div>

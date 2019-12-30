@@ -18,7 +18,7 @@ $samples['integrals'] = <<<'TEX'
 TEX;
 
 $samples['limits'] = <<<'TEX'
-\gamma \overset{def}{=}
+\gamma \overset{\text{def}}{=}
 \lim\limits_{n \to \infty} \left(
   \sum\limits_{k=1}^n {1 \over k} - \ln n
 \right) \approx 0.577
