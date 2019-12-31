@@ -1,4 +1,4 @@
-# S2 LaTeX Renderer
+# Upmath LaTeX Renderer
 
 Service for generating nice [SVG pictures from LaTeX equations](https://i.upmath.me/) for web. You can try it in action in the [Markdown and LaTeX online editor](https://upmath.me).
 
@@ -16,8 +16,8 @@ Service for generating nice [SVG pictures from LaTeX equations](https://i.upmath
 Deploy files:
 
 ```
-git clone git@github.com:parpalak/tex.s2cms.ru.git
-cd tex.s2cms.ru
+git clone git@github.com:parpalak/i.upmath.me.git
+cd i.upmath.me
 npm install
 composer install
 bower install
@@ -34,6 +34,6 @@ mcedit config.php # specify the LaTeX bin dir and other paths
 Set up the host:
 
 ```
-sudo cp nginx.conf.dist /etc/nginx/sites-available/tex.s2cms.ru
-sudo mcedit /etc/nginx/sites-available/tex.s2cms.ru
+sudo cp nginx.conf.dist /etc/nginx/sites-available/i.upmath.me
+sudo mcedit /etc/nginx/sites-available/i.upmath.me
 ```

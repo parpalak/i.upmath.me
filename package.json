@@ -1,6 +1,6 @@
 {
-  "name": "s2_latex_renderer",
-  "description": "S2 Latex Service",
+  "name": "upmath_latex_renderer",
+  "description": "Upmath Latex Renderer",
   "private": true,
   "version": "0.1.0",
   "dependencies": {

@@ -4,8 +4,8 @@
  *
  * @copyright 2014-2016 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @package   S2 Latex Service
- * @link      http://tex.s2cms.ru
+ * @package   Upmath Latex Renderer
+ * @link      https://i.upmath.me
  */
 
 require '../vendor/autoload.php';
@@ -34,7 +34,7 @@ function error400($error = 'Invalid formula')
 
 //ignore_user_abort();
 ini_set('max_execution_time', 10);
-header('X-Powered-By: S2 Latex Service');
+header('X-Powered-By: Upmath Latex Renderer');
 
 $templater = new \S2\Tex\Templater(TPL_DIR);
 

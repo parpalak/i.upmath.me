@@ -1,6 +1,6 @@
 {
   "name": "s2/latex_renderer",
-  "description": "S2 Latex Service",
+  "description": "Upmath Latex Renderer",
   "version": "0.1.0",
   "minimum-stability": "stable",
   "license": "MIT",

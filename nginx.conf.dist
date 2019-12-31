@@ -8,11 +8,11 @@ upstream php-tex-sock {
 
 server {
 	listen   80;
-	server_name  tex.s2cms.ru;
+	server_name  i.upmath.me;
 
-	root   /var/www/tex.s2cms.ru/www;
-	access_log  /var/www/tex.s2cms.ru/logs/access.log;
-	error_log /var/www/tex.s2cms.ru/logs/error.log error;
+	root   /var/www/i.upmath.me/www;
+	access_log  /var/www/i.upmath.me/logs/access.log;
+	error_log /var/www/i.upmath.me/logs/error.log error;
 
 	location ~ ^(?s)/(?<ext>svg|png)/(?<formula>.*)$ {
 		gzip_static   on;
