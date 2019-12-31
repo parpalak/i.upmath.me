@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 		concat: {
 			main: {
 				src: [
-					'bower_components/autosize/dist/autosize.js',
+					'bower_components/autosize/dist/autosize.min.js',
 					'bower_components/Stickyfill/dist/stickyfill.min.js',
 					'bower_components/ilyabirman-likely/release/likely.js',
 					'www/js/init_editor.js'
@@ -17,22 +17,6 @@ module.exports = function(grunt) {
 				files: {
 					'www/js/scripts.min.js': '<%= concat.main.dest %>'
 				}
-			}
-		},
-		copy: {
-			main: {
-				files: [
-					// includes files within path
-					{
-						expand: true,
-						src: [
-							'bower_components/jquery/dist/jquery.min.js'
-						],
-						dest: 'www/js/',
-						filter: 'isFile',
-						flatten: true
-					}
-				]
 			}
 		},
 		cssmin: {
@@ -58,7 +42,6 @@ module.exports = function(grunt) {
 			gzipJS: {
 				command: [
 					'gzip -cn6 www/js/scripts.min.js > www/js/scripts.min.js.gz',
-					'gzip -cn6 www/js/jquery.min.js > www/js/jquery.min.js.gz',
 					'gzip -cn6 www/css/style.min.css > www/css/style.min.css.gz'
 				].join(' && ')
 			},
@@ -100,7 +83,6 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-fingerprint');
 	grunt.loadNpmTasks('grunt-shell');
@@ -110,7 +92,6 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', [
 		'concat',
 		'uglify',
-		'copy',
 		'cssmin',
 		'replace',
 		'shell',

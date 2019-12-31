@@ -5,7 +5,8 @@
  */
 var Renderer = (function () {
 	var source, format,
-		callback = function () {},
+		callback = function () {
+		},
 		timeout;
 
 	function timerTick() {
@@ -42,7 +43,7 @@ var Renderer = (function () {
 }());
 
 function initTexEditor(serviceURL) {
-	var $source = $('.editor-text'),
+	var source = document.querySelector('.editor-text'),
 		preview = document.getElementById('editor-preview'),
 		oldOutput;
 
@@ -78,56 +79,68 @@ function initTexEditor(serviceURL) {
 	}
 
 	function updateSource() {
-		Renderer.setSource($.trim($source.val()));
+		Renderer.setSource(source.value.trim());
 	}
 
-	$(document.forms['editor'].elements['format']).on('change', updateFormat);
-	$source.on('propertychange keyup input paste', updateSource);
+	var radios = document.forms['editor'].elements['format'];
+	for (var i = radios.length; i--;) {
+		radios[i].onchange = updateFormat;
+	}
+	source.addEventListener('propertychange', updateSource);
+	source.addEventListener('keyup', updateSource);
+	source.addEventListener('input', updateSource);
+	source.addEventListener('paste', updateSource);
 
 	// Renderer initialization
 	updateFormat();
 	updateSource();
 
 	// Select the content of URL field on focus.
-	$('.editor-result').on('focus', function () {
+	document.querySelector('.editor-result').onfocus = function () {
 		var that = this;
 		setTimeout(function () {
 			that.select();
 		}, 10);
-	});
+	};
 
-	autosize($source);
+	autosize(source);
 
 	// Highlight textarea when the formula is invalid.
-	$(preview).error(function () {
+	preview.onerror = function () {
 		if (Renderer.getSource() !== '') {
 			setTimeout(function () {
-				$source.removeClass('load-error').addClass('load-error');
+				source.classList.remove('load-error');
+				source.classList.add('load-error');
 			}, 0);
 		}
-	}).load(function () {
-		$source.removeClass('load-error');
-	});
+	};
+	preview.onload = function () {
+		source.classList.remove('load-error');
+	};
 
 	// Add sample formula to the textarea.
-	$('.add-formula').click(function () {
-		var cur = $source.val(),
-			sampleText = $(this).parent().children('.sample-source').text();
+	var formulaButtons = document.querySelectorAll('.add-formula');
+	var formulaButtonHandler = function () {
+		var cur = source.value,
+			sampleText = this.parentNode.querySelector('.sample-source').innerText;
 
-		if (cur)
+		if (cur) {
 			cur += "\n";
-		$source.val(cur + sampleText).trigger('autosize.resize');
+		}
+		source.value = cur + sampleText;
+		autosize.update(source);
 		updateSource();
-		scrollPage($('#editor'));
-	});
-
-	function scrollPage($target) {
-		$('html,body').animate({
-			scrollTop: $target.offset().top - 45
-		}, 300);
+		scrollPage(document.getElementById('editor'));
+	};
+	for (i = formulaButtons.length; i--;) {
+		formulaButtons[i].onclick = formulaButtonHandler;
 	}
 
-	$('a.inside').click(function () {
+	function scrollPage(target) {
+		scrollIt(target.offsetTop - 45, 300, 'easeInOutCubic');
+	}
+
+	var innerClickHandler = function (e) {
 		if (location.pathname.replace(/^\//, '') !== this.pathname.replace(/^\//, '')) {
 			return;
 		}
@@ -135,17 +148,104 @@ function initTexEditor(serviceURL) {
 			return;
 		}
 
-		var target = $(this.hash);
-		target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+		var id = this.hash.slice(1);
+		var target = document.getElementById(id) || document.querySelector('[name=' + id + ']');
 
-		if (target.length) {
+		if (target) {
 			scrollPage(target);
-			return false;
+			e.stopPropagation();
+			e.preventDefault();
 		}
-	});
+	};
+
+	var insideLinks = document.querySelectorAll('a.inside');
+	for (i = insideLinks.length; i--;) {
+		insideLinks[i].onclick = innerClickHandler;
+	}
+
+	// https://pawelgrzybek.com/page-scroll-in-vanilla-javascript/
+	function scrollIt(destination, duration, easing, callback) {
+		duration = duration || 200;
+		easing = easing || 'linear';
+
+		var easings = {
+			linear: function (t) {
+				return t;
+			},
+			easeInQuad: function (t) {
+				return t * t;
+			},
+			easeOutQuad: function (t) {
+				return t * (2 - t);
+			},
+			easeInOutQuad: function (t) {
+				return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+			},
+			easeInCubic: function (t) {
+				return t * t * t;
+			},
+			easeOutCubic: function (t) {
+				return (--t) * t * t + 1;
+			},
+			easeInOutCubic: function (t) {
+				return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+			},
+			easeInQuart: function (t) {
+				return t * t * t * t;
+			},
+			easeOutQuart: function (t) {
+				return 1 - (--t) * t * t * t;
+			},
+			easeInOutQuart: function (t) {
+				return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t;
+			},
+			easeInQuint: function (t) {
+				return t * t * t * t * t;
+			},
+			easeOutQuint: function (t) {
+				return 1 + (--t) * t * t * t * t;
+			},
+			easeInOutQuint: function (t) {
+				return t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t;
+			}
+		};
+
+		var start = window.pageYOffset;
+		var startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
+
+		var documentHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+		var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+		var destinationOffset = typeof destination === 'number' ? destination : destination.offsetTop;
+		var destinationOffsetToScroll = Math.round(documentHeight - destinationOffset < windowHeight ? documentHeight - windowHeight : destinationOffset);
+
+		if ('requestAnimationFrame' in window === false) {
+			window.scroll(0, destinationOffsetToScroll);
+			if (callback) {
+				callback();
+			}
+			return;
+		}
+
+		function scroll() {
+			var now = 'now' in window.performance ? performance.now() : new Date().getTime();
+			var time = Math.min(1, ((now - startTime) / duration));
+			var timeFunction = easings[easing](time);
+			window.scroll(0, Math.ceil((timeFunction * (destinationOffsetToScroll - start)) + start));
+
+			if (window.pageYOffset === destinationOffsetToScroll) {
+				if (callback) {
+					callback();
+				}
+				return;
+			}
+
+			requestAnimationFrame(scroll);
+		}
+
+		scroll();
+	}
 }
 
 function initTexSite() {
-	$('.sticky').Stickyfill();
-	new Image().src = "//counter.yadro.ru/hit?r" + escape(document.referrer) + ((typeof(screen) == "undefined") ? "" : ";s" + screen.width + "*" + screen.height + "*" + (screen.colorDepth ? screen.colorDepth : screen.pixelDepth)) + ";u" + escape(document.URL) + ";h" + escape(document.title.substring(0, 80)) + ";" + Math.random();
+	Stickyfill.add(document.querySelectorAll('.sticky'));
 }

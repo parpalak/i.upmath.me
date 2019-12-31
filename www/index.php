@@ -87,7 +87,7 @@ foreach ($lang_links as $link_lang => $link_url)
 					<label><input type="radio" name="format" id="svg_radio" value="svg" checked />SVG</label>
 					<label><input type="radio" name="format" value="png" />PNG</label>
 				</p>
-				<p><img id="editor-preview" class="editor-preview" src="" /></p>
+				<p><img id="editor-preview" class="editor-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></p>
 				<table class="url-line">
 					<tr>
 						<td class="url-cell"><?php echo __('image URL'); ?></td>
@@ -156,10 +156,15 @@ foreach ($samples_embedding[$lang] as $hint => $sample)
 		</div>
 	</div>
 
-	<script src="/js/jquery.min.js?<?php echo FINGERPRINT; ?>"></script>
 	<script src="/js/scripts.min.js?<?php echo FINGERPRINT; ?>"></script>
 	<script>
-		$(function () {
+		(function ready(fn) {
+			if (document.readyState != 'loading'){
+				fn();
+			} else {
+				document.addEventListener('DOMContentLoaded', fn);
+			}
+		})(function () {
 			initTexEditor('<?php echo $service_url; ?>');
 			initTexSite();
 		});

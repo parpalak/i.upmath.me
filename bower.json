@@ -12,9 +12,8 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "~2.1.4",
-    "autosize": "~3.0.6",
-    "Stickyfill": "~1.1.1",
+    "autosize": "~4.0",
+    "Stickyfill": "~2.1",
     "ilyabirman-likely": "https://github.com/NikolayRys/Likely.git#acd1ab4"
   }
 }
