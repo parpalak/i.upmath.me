@@ -228,11 +228,16 @@ function initTexEditor(serviceURL) {
 
 		function scroll() {
 			var now = 'now' in window.performance ? performance.now() : new Date().getTime();
-			var time = Math.min(1, ((now - startTime) / duration));
-			var timeFunction = easings[easing](time);
-			window.scroll(0, Math.ceil((timeFunction * (destinationOffsetToScroll - start)) + start));
+			var time = (now - startTime) / duration;
+			if (time < 1) {
+				var timeFunction = easings[easing](time);
+				var y = Math.ceil((timeFunction * (destinationOffsetToScroll - start)) + start);
+			} else {
+				y = destinationOffsetToScroll;
+			}
+			window.scroll(0, y);
 
-			if (window.pageYOffset === destinationOffsetToScroll) {
+			if (y === destinationOffsetToScroll) {
 				if (callback) {
 					callback();
 				}
