@@ -14,21 +14,19 @@ $script_url = $service_url.'latex.js';
 $lang = $_SERVER['HTTP_HOST'] === 'tex.s2cms.ru' ? 'ru' : 'en';
 $i18n = include 'lang.' . $lang . '.php';
 
-$lang_links = [
+$langLinks = [
 	'ru' => '//tex.s2cms.ru/',
 	'en' => '//i.upmath.me/',
 ];
 
-function __ ($key)
-{
+function __ ($key) {
 	global $i18n;
 	return isset($i18n[$key]) ? $i18n[$key] : '<span style="color:red;">Missing translation: ' . $key . '</span>';
 }
 
 if (substr($_SERVER['REQUEST_URI'], 0, 3) === '/g/') {
 	$editor_content = urldecode(substr($_SERVER['REQUEST_URI'], 3));
-}
-else {
+} else {
 	$editor_content = 'f(x)';
 }
 
@@ -50,12 +48,10 @@ else {
 			<div class="lang-block">
 <?php
 
-foreach ($lang_links as $link_lang => $link_url)
-{
-	if ($link_lang != $lang)
-	{
+foreach ($langLinks as $linkLang => $linkUrl) {
+	if ($linkLang != $lang) {
 ?>
-				<a class="lang-link" href="<?php echo $link_url; ?>"><?php echo $link_lang; ?></a>
+				<a class="lang-link" href="<?php echo $linkUrl; ?>"><?php echo $linkLang; ?></a>
 <?php
 	}
 }
@@ -101,17 +97,16 @@ foreach ($lang_links as $link_lang => $link_url)
 	<div class="section" id="samples">
 		<div class="section-content">
 			<h2><?php echo __('examples'); ?></h2>
-			<p><?php echo __('examples info'); ?></p>
-
+		</div>
+		<div class="section-samples">
 <?php
-foreach ($samples as $hint => $sample)
-{
+foreach ($samples as $hint => $sample) {
 ?>
 			<div class="sample-box">
 				<h3 class="sample-title"><?php echo $i18n['samples'][$hint]; ?></h3>
-				<div class="sample-source"><?php echo htmlspecialchars($sample); ?></div>
 				<div class="sample-rendered">$$<?php echo $sample; ?>$$</div>
-				<button class="add-formula"><?php echo __('add to editor'); ?></button>
+				<div class="sample-source"><?php echo htmlspecialchars($sample); ?></div>
+				<p><button class="add-formula"><?php echo __('add to editor'); ?></button></p>
 			</div>
 <?php
 }
@@ -120,25 +115,27 @@ foreach ($samples as $hint => $sample)
 	</div>
 
 	<div class="section" id="faq">
-		<div class="section-content">
+		<div class="section-content text-content">
 			<?php echo __('faq section'); ?>
 		</div>
 	</div>
 
 	<div class="section" id="embedding">
-		<div class="section-content">
+		<div class="section-content text-content">
 			<?php echo __('embedding section 1'); ?>
 
-			<pre><code>&lt;script src=&quot;<a href="<?php echo $script_url; ?>"><?php echo $script_url; ?></a>&quot;&gt;&lt;/script&gt;</code></pre>
+			<pre class="script-code"><code>&lt;script src=&quot;<a href="<?php echo $script_url; ?>"><?php echo $script_url; ?></a>&quot;&gt;&lt;/script&gt;</code></pre>
 
-			<?php echo __('embedding section 2'); ?>
 <?php
-foreach ($samples_embedding[$lang] as $hint => $sample)
-{
+foreach ($samples_embedding[$lang] as $hint => $sample) {
 	$escaped = str_replace('$$', '<span>$$</span>', htmlspecialchars($sample));
 ?>
-			<div>
+			<div class="question">
+				<?php echo __('embedding section 2'); ?>
 				<div class="sample-source sample-box"><?php echo $escaped; ?></div>
+			</div>
+			<div class="question">
+				<?php echo __('embedding section 2.1'); ?>
 				<div class="sample-rendered"><?php echo $sample; ?></div>
 			</div>
 <?php
@@ -148,7 +145,7 @@ foreach ($samples_embedding[$lang] as $hint => $sample)
 		</div>
 	</div>
 
-	<div class="section">
+	<div class="section" id="copyright">
 		<div class="section-content">
 			<div>
 				<?php echo __('copyright section'); ?>

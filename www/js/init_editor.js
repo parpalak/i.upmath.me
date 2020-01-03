@@ -122,7 +122,7 @@ function initTexEditor(serviceURL) {
 	var formulaButtons = document.querySelectorAll('.add-formula');
 	var formulaButtonHandler = function () {
 		var cur = source.value,
-			sampleText = this.parentNode.querySelector('.sample-source').innerText;
+			sampleText = this.parentNode.parentNode.querySelector('.sample-source').innerText;
 
 		if (cur) {
 			cur += "\n";
@@ -137,7 +137,7 @@ function initTexEditor(serviceURL) {
 	}
 
 	function scrollPage(target) {
-		scrollIt(target.offsetTop - 45, 300, 'easeInOutCubic');
+		scrollIt(target.offsetTop - 37, 300, 'easeInOutCubic');
 	}
 
 	var innerClickHandler = function (e) {

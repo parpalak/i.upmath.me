@@ -1,6 +1,7 @@
 /* colors */
 body {
-	background: #FFFBDA; color: #000;
+	background: #FFFBDA;
+	color: #000;
 	}
 .sample-source, .add-formula {
 	color: #743200;
@@ -27,7 +28,6 @@ a:active, a:hover {
 #faq {
 	background: #fff;
 	}
-
 .header,
 #moto {
 	background: #742600;
@@ -58,6 +58,9 @@ input[type="text"], textarea {
 	color: #000;
 	border-color: #ba9b3f;
 }
+.script-code {
+	overflow: auto;
+	}
 .screenshot {
 	background: #fff;
 	box-shadow: 0 5px 25px rgba(130, 100, 80, 0.6);
@@ -85,33 +88,49 @@ a {
 	text-decoration: none;
 	border-bottom: 1px solid;
 	}
+.section#samples {
+	padding-right: 0;
+	}
+.section-samples {
+	display: flex;
+	flex-wrap: wrap;
+	}
+	.sample-box {
+		flex: 0 1 23em;
+		position: relative;
+		margin: 0 1em 0 0;
+		}
 .sample-source, .sample-rendered {
-	display: inline-block;
-	vertical-align: top;
+	margin: 0 0 1em;
 	}
 	.sample-source {
 		font: 1em/1.2 Consolas, monospace;
 		white-space: pre;
 		white-space: pre-wrap;
-		width: 55%;
-		margin-right: 4%;
 		}
 	.sample-rendered {
 		font-family: Cambria, Georgia, serif;
-		width: 40%;
 		}
-.sample-title {border-bottom: 1px solid #eda; margin-bottom: 0.325em;}
+		#embedding .sample-rendered {
+			border: 1px solid #eee;
+			padding: 1em;
+			background: #fff;
+			}
+.sample-title {
+	margin-bottom: 0.325em;
+	}
 h1, h2, h3 {
 	font: 16px/1.5 Cambria, Georgia, serif;
-	margin: 1em 0 0;
+	margin: 0;
 	font-weight: normal;
 	}
 h1 {
-	margin: 12px 0 0;
+	margin: 12px 0 6px;
 	font-size: 225%;
+	line-height: 1;
 	}
 h2 {
-	margin: 1em 0 0.25em;
+	margin: 0.75em 0 0.375em;
 	font-size: 175%;
 	}
 h3 {
@@ -120,39 +139,42 @@ h3 {
 h2+h3 {margin-top: 0;}
 .section {
 	padding: 1px 1em;
+	padding: 1px calc(0.5em + 1%);
+	}
+.header-content {
+	padding: 0 1em;
+	padding: 0 calc(0.5em + 1%);
 	}
 	.section-content {
-		max-width: 850px;
-		margin: 0 auto;
+		max-width: 720px;
+		margin: 0 auto 0 0;
 		}
 	.header {
 		top: 0;
 		left: 0;
 		right: 0;
 		z-index: 100;
-		height: 45px;
+		height: 37px;
 		box-shadow: 0 2px 3px rgba(140, 100, 80, 0.4);
 		}
-		.header-content {
-			padding: 0 1em;
-		}
 		.nav {
-			margin: 0 -1em;
-			height: 45px;
+			margin: 0 -0.5em;
+			height: 37px;
 			overflow: hidden;
 			}
 			a.nav-item {
 				display: inline-block;
 				vertical-align: middle;
-				height: 45px;
-				line-height: 45px;
-				padding: 0 1em;
+				height: 37px;
+				line-height: 37px;
+				padding: 0 0.5em;
 				text-decoration: none;
 				border: 0;
 				}
 	#moto {
-		padding: 5px 1em 45px;
-		margin-bottom: -45px;
+		padding-top: 5px;
+		padding-bottom: 37px;
+		margin-bottom: -37px;
 		position: relative;
 		}
 		.lang-block {
@@ -198,9 +220,6 @@ h2+h3 {margin-top: 0;}
 	background: transparent;
 	padding: 0;
 	cursor: pointer;
-	position: absolute;
-	right: 0;
-	top: 9px;
 	}
 .nav-link {
 	line-height: 1;
@@ -214,10 +233,6 @@ h2+h3 {margin-top: 0;}
 	}
 p, pre, .url-line {
 	margin: 0 0 1.5em;
-	}
-.sample-box {
-	position: relative;
-	margin-bottom: 1.5em;
 	}
 .url-line {
 	border-collapse: collapse;
@@ -245,4 +260,54 @@ p, pre, .url-line {
 
 .likely {
 	vertical-align: middle;
+	}
+
+.text-content {
+	max-width: initial;
+}
+.info-text {
+	column-width: 410px;
+	column-gap: 3em;
+}
+.question,
+.sample-source,
+.sample-rendered {
+	-webkit-column-break-inside: avoid;
+	page-break-inside: avoid;
+	break-inside: avoid;
+}
+#faq .question {
+	display: inline-block; /* cannot set up normal margin, they do not collapse when colums are enabled */
+}
+.question {
+	position: relative;
+}
+
+@media screen and (min-width: 1860px) {
+	#embedding, #faq {
+		float: left;
+		width: 50%;
+		box-sizing: border-box;
+	}
+	#faq {
+		background: none;
+	}
+
+	#copyright {
+		float: left;
+		width: 100%;
+		box-sizing: border-box;
+	}
+}
+@media (max-width: 640px) {
+	h1 {
+		font-size: 175%;
+		margin: 6px 30px 0 0;
+	}
+	.section {
+		padding: 1px 0.5em;
+	}
+	.header-content {
+		padding: 0 0.5em;
+	}
 }

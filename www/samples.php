@@ -19,29 +19,20 @@ TEX;
 
 $samples['limits'] = <<<'TEX'
 \gamma \overset{\text{def}}{=}
-\lim\limits_{n \to \infty} \left(
-  \sum\limits_{k=1}^n {1 \over k} - \ln n
-\right) \approx 0.577
-TEX;
-
-$samples['chains'] = <<<'TEX'
-e = 2 + \cfrac{1}{
-  1 + \cfrac{1}{
-    2 + \cfrac{2}{
-      3 + \cfrac{3}{
-        4 + \cfrac{4}{\ldots}
-      }
-    }
-  }
-}
+\lim\limits_{n \to \infty}
+  \left(
+     \sum\limits_{k=1}^n {1 \over k}
+     - \ln n
+  \right)
+\approx 0.577
 TEX;
 
 $samples['matrices'] = <<<'TEX'
 A_{m,n} = \begin{pmatrix}
- a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
- a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
- \vdots  & \vdots  & \ddots & \vdots  \\
- a_{m,1} & a_{m,2} & \cdots & a_{m,n}
+a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+\vdots  & \vdots  & \ddots & \vdots  \\
+a_{m,1} & a_{m,2} & \cdots & a_{m,n}
 \end{pmatrix}
 TEX;
 
@@ -51,6 +42,15 @@ $samples['align'] = <<<'TEX'
    &= (x^2+2)^2 - 4x^2 \le\\
    &\le (x^2+2)^2
 \end{align*}
+TEX;
+
+$samples['chains'] = <<<'TEX'
+e = 2 + \cfrac{1}{
+  1 + \cfrac{1}{
+  2 + \cfrac{2}{
+  3 + \cfrac{3}{
+  4 + \cfrac{4}{\ldots}
+}}}}
 TEX;
 
 $samples['picture'] = <<<'TEX'
