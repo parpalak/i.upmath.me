@@ -83,7 +83,7 @@ foreach ($langLinks as $linkLang => $linkUrl) {
 					<label><input type="radio" name="format" id="svg_radio" value="svg" checked />SVG</label>
 					<label><input type="radio" name="format" value="png" />PNG</label>
 				</p>
-				<p><img id="editor-preview" class="editor-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></p>
+				<p class="preview-block"><img id="editor-preview" class="editor-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></p>
 				<table class="url-line">
 					<tr>
 						<td class="url-cell"><?php echo __('image URL'); ?></td>

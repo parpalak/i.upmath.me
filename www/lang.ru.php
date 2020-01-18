@@ -110,7 +110,7 @@ return [
 				<p>В современных браузерах скрипт загружает векторные картинки в&nbsp;формате SVG
 				и&nbsp;выравнивает базовые линии формул и&nbsp;окружающего текста:</p>
 
-				<p align="center"><img src="/i/baseline.png" alt="" width="400" height="230" class="screenshot" /></p>
+				<p align="center"><img src="/i/baseline.png" alt="" width="400" height="230" class="screenshot" style="max-width: 90vw; max-height: 51.75vw;" /></p>
 			</div>
 			<p>
 				На этом сервисе работает <a href="http://susy.written.ru/">блог о&nbsp;теоретической физике</a>.
