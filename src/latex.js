@@ -62,10 +62,11 @@
 
 	function image(f, c) {
 		var s = (ext === 'svg'),
-			i = d.createElement(s ? 'embed' : 'img');
+			i = d.createElement(s ? 'object' : 'img');
 
-		i.setAttribute('src', url + '/' + ext + '/' + encodeURIComponent(f));
+		i.setAttribute(s ? 'data' : 'src', url + '/' + ext + '/' + encodeURIComponent(f));
 		i.setAttribute('class', 'latex-' + ext);
+
 		s && i.setAttribute('type', 'image/svg+xml');
 		i.setAttribute('style', s ? 'width:0.2em; height:0.2em;' : 'vertical-align:middle; border:0; position: relative; z-index:-1; top:-4px;');
 		!s && i.setAttribute('alt', f);
@@ -81,7 +82,7 @@
 			var eCur = eNext, sNn = eCur.nodeName;
 			eNext = eNext.nextSibling;
 
-			if (eCur.nodeType === 1 && sNn !== 'SCRIPT' && sNn !== 'TEXTAREA' && sNn !== 'EMBED') {
+			if (eCur.nodeType === 1 && sNn !== 'SCRIPT' && sNn !== 'TEXTAREA' && sNn !== 'OBJECT') {
 				processTree(eCur);
 			} else if (eCur.nodeType === 3) {
 				var as = (' ' + eCur.nodeValue + ' ').split(/\$\$/g),
@@ -147,7 +148,7 @@
 		}
 
 		if (!ao) {
-			ao = d.getElementsByTagName('embed');
+			ao = d.getElementsByTagName('object');
 		}
 
 		var s = e.data.split('|'),
@@ -157,8 +158,8 @@
 		s = s.join('|');
 
 		for (; i-- ;) {
-			if (ao[i].src === s || decodeURIComponent(ao[i].src) === s) {
-				ao[i].setAttribute('style', 'width:' + x + 'pt; height:' + y + 'pt; vertical-align:' + (ao[i].isCentered ? 'top;' : (-v) + 'pt;'));
+			if (ao[i].data === s || decodeURIComponent(ao[i].data) === s) {
+				ao[i].setAttribute('style',  'width: auto; /* ' + x + 'pt;*/ height: auto; /* ' + y + 'pt; */ vertical-align:' + (ao[i].isCentered ? 'top;' : (-v) + 'pt;'));
 			}
 		}
 	}, !1);
