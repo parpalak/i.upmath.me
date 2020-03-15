@@ -18,7 +18,7 @@ Deploy files:
 ```
 git clone git@github.com:parpalak/i.upmath.me.git
 cd i.upmath.me
-npm install
+yarn install
 composer install
 bower install
 grunt
