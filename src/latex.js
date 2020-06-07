@@ -60,17 +60,55 @@
 		processTree(d.body);
 	});
 
+	var aeImg = {};
+
+	function trackLoading(eImg, path) {
+		if (aeImg[path]) {
+			aeImg[path].push(eImg);
+		} else {
+			aeImg[path] = [eImg];
+
+			fetch(path)
+				.then((resp) => {
+					return resp.text();
+				})
+				.then((text) => {
+					var m = text.match(/postMessage\((?:&quot;|")([\d\|\.\-eE]*)(?:&quot;|")/), s;
+
+					if (m && m[1]) {
+						s = m[1].split('|');
+						setSizes(path, s.shift(), s.shift(), s.shift());
+					}
+				});
+		}
+	}
+
+	function setSizes(path, shift, x, y) {
+		var ao = aeImg[path], i = ao.length;
+
+		for (; i--;) {
+			ao[i].setAttribute('style', 'width: ' + x + 'pt; height: ' + (Number(y) + 1) + 'pt; ' +
+				'margin-top: -0.5pt; vertical-align:' + (ao[i].isCentered ? 'top;' : (-shift - 0.5) + 'pt;'));
+		}
+	}
+
 	function createImgNode(formula, isCentered) {
 		var s = (ext === 'svg'),
-			i = d.createElement(s ? 'object' : 'img');
+			i = d.createElement('img'),
+			path = url + '/' + ext + '/' + encodeURIComponent(formula);
 
-		i.setAttribute(s ? 'data' : 'src', formula + '/' + ext + '/' + encodeURIComponent(formula));
+		i.setAttribute('src', path);
 		i.setAttribute('class', 'latex-' + ext);
 
-		s && i.setAttribute('type', 'image/svg+xml');
-		i.setAttribute('style', s ? 'width:0.2em; height:0.2em;' : 'vertical-align:middle; border:0; position: relative; z-index:-1; top:-4px;');
-		!s && i.setAttribute('alt', formula);
+		!s && i.setAttribute('style', 'vertical-align:middle; border:0; margin-top:-4px;');
+		i.setAttribute('alt', formula);
 		s && isCentered && (i.isCentered = 1);
+
+		try {
+			trackLoading(i, path);
+		} catch (e) {
+			// noop
+		}
 
 		return i;
 	}
@@ -144,29 +182,4 @@
 	};
 
 	w.S2Latex = {processTree: processTree};
-
-	var ao;
-
-	w.addEventListener && w.addEventListener('message', function (e) {
-		if (e.origin.replace(/^https?:/, '') !== ntwPath) {
-			return;
-		}
-
-		if (!ao) {
-			ao = d.getElementsByTagName('object');
-		}
-
-		var s = e.data.split('|'),
-			v = s.shift(), x = s.shift(), y = s.shift(),
-			i = ao.length;
-
-		s = s.join('|');
-
-		for (; i-- ;) {
-			if (ao[i].data === s || decodeURIComponent(ao[i].data) === s) {
-				ao[i].setAttribute('style',  'width: auto; /* ' + x + 'pt;*/ height: auto; /* ' + y + 'pt; */ vertical-align:' + (ao[i].isCentered ? 'top;' : (-v) + 'pt;'));
-			}
-		}
-	}, !1);
-
 })(window, document);
