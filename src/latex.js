@@ -99,9 +99,9 @@
 
 		i.setAttribute('src', path);
 		i.setAttribute('class', 'latex-' + ext);
-
-		!s && i.setAttribute('style', 'vertical-align:middle; border:0; margin-top:-4px;');
+		i.setAttribute('style', 'vertical-align:middle; border:0; margin-top:-0.5pt;');
 		i.setAttribute('alt', formula);
+
 		s && isCentered && (i.isCentered = 1);
 
 		try {
