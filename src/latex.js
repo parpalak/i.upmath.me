@@ -1,6 +1,6 @@
 /**
  * Replaces LaTeX formulas by pictures
- * @copyright 2012-2018 Roman Parpalak
+ * @copyright 2012-2020 Roman Parpalak
  */
 
 (function (w, d) {
@@ -60,17 +60,17 @@
 		processTree(d.body);
 	});
 
-	function image(f, c) {
+	function createImgNode(formula, isCentered) {
 		var s = (ext === 'svg'),
 			i = d.createElement(s ? 'object' : 'img');
 
-		i.setAttribute(s ? 'data' : 'src', url + '/' + ext + '/' + encodeURIComponent(f));
+		i.setAttribute(s ? 'data' : 'src', formula + '/' + ext + '/' + encodeURIComponent(formula));
 		i.setAttribute('class', 'latex-' + ext);
 
 		s && i.setAttribute('type', 'image/svg+xml');
 		i.setAttribute('style', s ? 'width:0.2em; height:0.2em;' : 'vertical-align:middle; border:0; position: relative; z-index:-1; top:-4px;');
-		!s && i.setAttribute('alt', f);
-		s && c && (i.isCentered = 1);
+		!s && i.setAttribute('alt', formula);
+		s && isCentered && (i.isCentered = 1);
 
 		return i;
 	}
@@ -84,56 +84,61 @@
 
 			if (eCur.nodeType === 1 && sNn !== 'SCRIPT' && sNn !== 'TEXTAREA' && sNn !== 'OBJECT') {
 				processTree(eCur);
-			} else if (eCur.nodeType === 3) {
-				var as = (' ' + eCur.nodeValue + ' ').split(/\$\$/g),
-					n = as.length, i, s;
+				continue;
+			}
 
-				if (n === 3 &&
-					(/^[ \t]$/.test(as[0])) &&
-					(/(?:[ \t]*\([ \t]*\S+[ \t]*\))?[ \t]*/.test(as[2])) &&
-					eItem.tagName === 'P' && eItem.childNodes.length <= 2
-				) {
-					s = image(as[1], 1);
-					eItem.insertBefore(s, eCur);
-					eItem.setAttribute('align', 'center');
+			if (eCur.nodeType !== 3) {
+				continue;
+			}
 
-					var eSpan = d.createElement('span');
-					eSpan.appendChild(d.createTextNode(as[2]));
-					eSpan.setAttribute('style', 'float:right;');
+			var as = (' ' + eCur.nodeValue + ' ').split(/\$\$/g),
+				n = as.length, i, eResult;
 
-					eItem.insertBefore(eSpan, eCur);
-					eItem.removeChild(eCur);
-				} else if (n > 2) {
-					as[0] = as[0].substring(1);
-					as[n - 1] = as[n - 1].substring(0, as[n - 1].length - 1);
+			if (n === 3 &&
+				(/^[ \t]$/.test(as[0])) &&
+				(/(?:[ \t]*\([ \t]*\S+[ \t]*\))?[ \t]*/.test(as[2])) &&
+				eItem.tagName === 'P' && eItem.childNodes.length <= 2
+			) {
+				eResult = createImgNode(as[1], 1);
+				eItem.insertBefore(eResult, eCur);
+				eItem.setAttribute('align', 'center');
 
-					for (i = 0; i < n; i++) {
-						if (i % 2) {
-							if (i + 1 < n) {
-								s = image(as[i]);
+				var eSpan = d.createElement('span');
+				eSpan.appendChild(d.createTextNode(as[2]));
+				eSpan.setAttribute('style', 'float:right;');
 
-								var after = as[i + 1].substring(0, 2);
-								if (/[,.;!?)] /.test(after)) {
-									as[i + 1] = as[i + 1].substring(1);
+				eItem.insertBefore(eSpan, eCur);
+				eItem.removeChild(eCur);
+			} else if (n > 2) {
+				as[0] = as[0].substring(1);
+				as[n - 1] = as[n - 1].substring(0, as[n - 1].length - 1);
 
-									var nobr = d.createElement('span');
-									nobr.style.whiteSpace = 'pre';
-									nobr.appendChild(s);
-									s = nobr;
-									s.appendChild(d.createTextNode(after.substring(0, 1)));
-								}
-							} else {
-								s = d.createTextNode('$$' + as[i]);
+				for (i = 0; i < n; i++) {
+					if (i % 2) {
+						if (i + 1 < n) {
+							eResult = createImgNode(as[i]);
+
+							var after = as[i + 1].substring(0, 2);
+							if (/[,.;!?)] /.test(after)) {
+								as[i + 1] = as[i + 1].substring(1);
+
+								var nobr = d.createElement('span');
+								nobr.style.whiteSpace = 'pre';
+								nobr.appendChild(eResult);
+								eResult = nobr;
+								eResult.appendChild(d.createTextNode(after.substring(0, 1)));
 							}
 						} else {
-							s = d.createTextNode(as[i]);
+							eResult = d.createTextNode('$$' + as[i]);
 						}
-
-						eItem.insertBefore(s, eCur);
+					} else {
+						eResult = d.createTextNode(as[i]);
 					}
 
-					eItem.removeChild(eCur);
+					eItem.insertBefore(eResult, eCur);
 				}
+
+				eItem.removeChild(eCur);
 			}
 		}
 	};
