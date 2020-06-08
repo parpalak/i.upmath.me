@@ -88,7 +88,7 @@
 
 		for (; i--;) {
 			ao[i].setAttribute('style', 'width: ' + x + 'pt; height: ' + (Number(y) + 1) + 'pt; ' +
-				'margin-top: -0.5pt; vertical-align:' + (ao[i].isCentered ? 'top;' : (-shift - 0.5) + 'pt;'));
+				'margin-top: -0.5pt; opacity: 1; vertical-align:' + (ao[i].isCentered ? 'top;' : (-shift - 0.5) + 'pt;'));
 		}
 	}
 
@@ -99,7 +99,7 @@
 
 		i.setAttribute('src', path);
 		i.setAttribute('class', 'latex-' + ext);
-		i.setAttribute('style', 'vertical-align:middle; border:0; margin-top:-0.5pt;');
+		i.setAttribute('style', 'vertical-align:middle; border:0; margin-top:-0.5pt; opacity:0;');
 		i.setAttribute('alt', formula);
 
 		s && isCentered && (i.isCentered = 1);
@@ -107,7 +107,7 @@
 		try {
 			trackLoading(i, path);
 		} catch (e) {
-			// noop
+			i.style.opacity = '1';
 		}
 
 		return i;
