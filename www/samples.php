@@ -2,22 +2,23 @@
 /**
  * Equation samples for the main page.
  *
- * @copyright 2014-2015 Roman Parpalak
+ * @copyright 2014-2020 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
  */
 
-$samples = array();
+$samples = [];
 
-$samples['integrals'] = <<<'TEX'
+$samples['integrals'] = ['height' => '78.0781px', 'text' => <<<'TEX'
 \boxed{
   \int\limits_{-\infty}^{\infty}
   e^{-x^2} \, dx = \sqrt{\pi}
 }
-TEX;
+TEX
+];
 
-$samples['limits'] = <<<'TEX'
+$samples['limits'] = ['height' => '55.3984px', 'text' => <<<'TEX'
 \gamma \overset{\text{def}}{=}
 \lim\limits_{n \to \infty}
   \left(
@@ -25,35 +26,39 @@ $samples['limits'] = <<<'TEX'
      - \ln n
   \right)
 \approx 0.577
-TEX;
+TEX
+];
 
-$samples['matrices'] = <<<'TEX'
+$samples['matrices'] = ['height' => '99.1797px', 'text' => <<<'TEX'
 A_{m,n} = \begin{pmatrix}
 a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
 a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
 \vdots  & \vdots  & \ddots & \vdots  \\
 a_{m,1} & a_{m,2} & \cdots & a_{m,n}
 \end{pmatrix}
-TEX;
+TEX
+];
 
-$samples['align'] = <<<'TEX'
+$samples['align'] = ['height' => '99.1797px', 'text' => <<<'TEX'
 \begin{align*}
  y &= x^4 + 4 =\\
    &= (x^2+2)^2 - 4x^2 \le\\
    &\le (x^2+2)^2
 \end{align*}
-TEX;
+TEX
+];
 
-$samples['chains'] = <<<'TEX'
+$samples['chains'] = ['height' => '150.359px', 'text' => <<<'TEX'
 e = 2 + \cfrac{1}{
   1 + \cfrac{1}{
   2 + \cfrac{2}{
   3 + \cfrac{3}{
   4 + \cfrac{4}{\ldots}
 }}}}
-TEX;
+TEX
+];
 
-$samples['picture'] = <<<'TEX'
+$samples['picture'] = ['height' => '36.5px', 'text' => <<<'TEX'
 \begin{picture}(76,20)
 \put(0,0){$A$}
 \put(69,0){$B$}
@@ -62,16 +67,18 @@ $samples['picture'] = <<<'TEX'
 \put(14,3){\circle*{2}}
 \put(64,3){\circle*{2}}
 \end{picture}
-TEX;
+TEX
+];
 
-$samples['xy-pics'] = <<<'TEX'
+$samples['xy-pics'] = ['height' => '98.0938px', 'text' => <<<'TEX'
 \xymatrix{
   A \ar[r]^f \ar[d]_g &
   B \ar[d]^{g'} \\
   D \ar[r]_{f'} &
   C
 }
-TEX;
+TEX
+];
 
 ob_start();
 ?>

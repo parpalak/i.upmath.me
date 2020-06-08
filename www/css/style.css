@@ -112,6 +112,9 @@ a {
 	.sample-rendered {
 		font-family: Cambria, Georgia, serif;
 		}
+		.sample-rendered img.latex-svg {
+			vertical-align: top;
+			}
 		#embedding .sample-rendered {
 			border: 1px solid #eee;
 			padding: 1em;
@@ -204,6 +207,9 @@ h2+h3 {margin-top: 0;}
 	-webkit-transition: border-color 0.2s;
 	transition: border-color 0.2s;
 	resize: none;
+	padding: 3px;
+	line-height: 1.25;
+	height: 108px; /* style for jumping textarea in FF */
 	}
 .editor-preview {
 	-ms-interpolation-mode: nearest-neighbor;
@@ -211,6 +217,7 @@ h2+h3 {margin-top: 0;}
 	image-rendering: -moz-crisp-edges;
 	image-rendering: -o-crisp-edges;
 	image-rendering: pixelated;
+	vertical-align: top;
 }
 .add-formula {
 	font-size: 13px;

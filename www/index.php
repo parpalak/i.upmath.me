@@ -104,8 +104,8 @@ foreach ($samples as $hint => $sample) {
 ?>
 			<div class="sample-box">
 				<h3 class="sample-title"><?php echo $i18n['samples'][$hint]; ?></h3>
-				<div class="sample-rendered">$$<?php echo $sample; ?>$$</div>
-				<div class="sample-source"><?php echo htmlspecialchars($sample); ?></div>
+				<div class="sample-rendered" style="height: <?php echo htmlspecialchars($sample['height']); ?>">$$<?php echo $sample['text']; ?>$$</div>
+				<div class="sample-source"><?php echo htmlspecialchars($sample['text']); ?></div>
 				<p><button class="add-formula"><?php echo __('add to editor'); ?></button></p>
 			</div>
 <?php
