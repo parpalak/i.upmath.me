@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2016 Roman Parpalak
+ * @copyright 2020 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -8,45 +8,23 @@
 
 namespace S2\Tex\Tpl;
 
-/**
- * Class Formula
- */
 class Formula
 {
-	/**
-	 * @var string
-	 */
-	protected $text = '';
+	protected $text;
+	protected $hasBaseline;
 
-	/**
-	 * @var bool
-	 */
-	protected $hasBaseline = true;
-
-	/**
-	 * Formula constructor.
-	 *
-	 * @param string $text
-	 * @param bool   $hasBaseline
-	 */
-	public function __construct($text, $hasBaseline)
+	public function __construct(string $text, bool $hasBaseline)
 	{
 		$this->text        = $text;
 		$this->hasBaseline = $hasBaseline;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getText()
+	public function getText(): string
 	{
 		return $this->text;
 	}
 
-	/**
-	 * @return boolean
-	 */
-	public function hasBaseline()
+	public function hasBaseline(): bool
 	{
 		return $this->hasBaseline;
 	}

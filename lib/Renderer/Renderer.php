@@ -1,30 +1,32 @@
 <?php
 /**
- * @copyright 2014-2016 Roman Parpalak
+ * @copyright 2014-2020 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
  */
 
-namespace S2\Tex;
+namespace S2\Tex\Renderer;
 
 use Psr\Log\LoggerInterface;
+use S2\Tex\TemplaterInterface;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
 
 /**
- * Class Renderer
- *
  * Runs Latex CLI.
  */
 class Renderer implements RendererInterface
 {
-	const SVG_PRECISION = 5;
-
 	/**
 	 * @var TemplaterInterface
 	 */
 	private $templater;
+
+	/**
+	 * @var PngConverter
+	 */
+	protected $pngConverter;
 
 	/**
 	 * @var LoggerInterface
@@ -44,33 +46,13 @@ class Renderer implements RendererInterface
 	private $latexCommand;
 	private $pngCommand;
 	private $svgCommand;
-	private $svg2pngCommand;
 
-	/**
-	 * @var string
-	 */
-	private $svg = '';
-
-	/**
-	 * @var string
-	 */
-	private $png = '';
-
-	/**
-	 * Renderer constructor.
-	 *
-	 * @param TemplaterInterface $templater
-	 * @param string             $tmpDir
-	 * @param string             $latexCommand
-	 * @param string             $svgCommand
-	 * @param null               $pngCommand
-	 */
 	public function __construct(
 		TemplaterInterface $templater,
-		$tmpDir,
-		$latexCommand,
-		$svgCommand,
-		$pngCommand = null
+		string $tmpDir,
+		string $latexCommand,
+		string $svgCommand,
+		?string $pngCommand = null
 	) {
 		$this->templater = $templater;
 
@@ -81,36 +63,21 @@ class Renderer implements RendererInterface
 		$this->pngCommand   = $pngCommand;
 	}
 
-	/**
-	 * @param bool $isDebug
-	 *
-	 * @return $this
-	 */
-	public function setIsDebug($isDebug)
+	public function setIsDebug(bool $isDebug): self
 	{
 		$this->isDebug = $isDebug;
 
 		return $this;
 	}
 
-	/**
-	 * @param LoggerInterface $logger
-	 *
-	 * @return $this
-	 */
-	public function setLogger(LoggerInterface $logger)
+	public function setLogger(LoggerInterface $logger): self
 	{
 		$this->logger = $logger;
 
 		return $this;
 	}
 
-	/**
-	 * @param string $formula
-	 *
-	 * @throws \Exception
-	 */
-	private function validateFormula($formula)
+	private function validateFormula(string $formula): void
 	{
 		foreach (['\\write', '\\input', '\\usepackage', '\\special'] as $disabledCommand) {
 			if (strpos($formula, $disabledCommand) !== false) {
@@ -118,22 +85,19 @@ class Renderer implements RendererInterface
 					$this->logger->error(sprintf('Forbidden command "%s": ', $disabledCommand), [$formula]);
 					$this->logger->error('Server vars: ', $_SERVER);
 				}
-				throw new \Exception('Forbidden commands.');
+				throw new \RuntimeException('Forbidden commands.');
 			}
 		}
 	}
 
 	/**
-	 * @param string $formula
-	 *
-	 * @return null|void
-	 * @throws \Exception
+	 * {@inheritdoc}
 	 */
-	public function run($formula)
+	public function run(string $formula, string $type): string
 	{
 		$this->validateFormula($formula);
 
-		$tmpName = tempnam(TMP_DIR, '');
+		$tmpName = tempnam($this->tmpDir, '');
 
 		$formulaObj = $this->templater->run($formula);
 		$texSource  = $formulaObj->getText();
@@ -148,8 +112,7 @@ class Renderer implements RendererInterface
 
 		try {
 			$exitCode = $process->run();
-		}
-		catch (\Exception $e) {
+		} catch (\Exception $e) {
 			if ($this->logger !== null) {
 				$message = $e instanceof ProcessTimedOutException ? 'Latex has been interrupted by a timeout' : 'Cannot run Latex';
 				$this->logger->error($message, [
@@ -166,6 +129,7 @@ class Renderer implements RendererInterface
 		if ($this->isDebug) {
 			echo '<pre>';
 			readfile($tmpName . '.log');
+			/** @noinspection ForgottenDebugOutputInspection */
 			var_dump('exitcode', $exitCode);
 			echo '</pre>';
 		}
@@ -185,7 +149,7 @@ class Renderer implements RendererInterface
 
 			$this->dumpDebug($this);
 			$this->cleanupTempFiles($tmpName);
-			throw new \Exception('Invalid formula');
+			throw new \RuntimeException('Invalid formula');
 		}
 
 		// DVI -> SVG
@@ -195,114 +159,59 @@ class Renderer implements RendererInterface
 		$this->dumpDebug($cmd);
 		$this->dumpDebug($svgOutput);
 
-		$this->setSvgContent(file_get_contents($tmpName . '.svg'), $formulaObj->hasBaseline());
+		$svgContent = SvgHelper::processSvgContent(file_get_contents($tmpName . '.svg'), $formulaObj->hasBaseline());
 
-		if ($this->svg2pngCommand) {
-			// SVG -> PNG
-			ob_start();
-			passthru(sprintf($this->svg2pngCommand, $tmpName));
-			$this->png = ob_get_clean();
-		}
-		elseif ($this->pngCommand) {
-			// DVI -> PNG
-			exec(sprintf($this->pngCommand, $tmpName));
-			$this->png = file_get_contents($tmpName . '.png');
+		if ($type === 'png') {
+			if ($this->pngConverter) {
+				// SVG -> PNG
+				$pngContent = $this->pngConverter->convert($tmpName . '.svg');
+			}
+			if ($this->pngCommand) {
+				// DVI -> PNG
+				exec(sprintf($this->pngCommand, $tmpName));
+				$pngContent = file_get_contents($tmpName . '.png');
+			}
 		}
 
 		// Cleaning up
 		$this->cleanupTempFiles($tmpName);
+
+		return $type === 'png' ? $pngContent : $svgContent;
 	}
 
-	public function getSVG()
-	{
-		return $this->svg;
-	}
-
-	public function getPNG()
-	{
-		return $this->png;
-	}
-
-	/**
-	 * @param string $tmp_name
-	 */
-	private function cleanupTempFiles($tmp_name)
+	private function cleanupTempFiles($tmpName): void
 	{
 		foreach (['', '.log', '.aux', '.dvi', '.svg', '.png'] as $ext) {
-			@unlink($tmp_name . $ext);
+			@unlink($tmpName . $ext);
 		}
 	}
 
-	/**
-	 * @param string $command
-	 *
-	 * @return $this
-	 */
-	public function setSVG2PNGCommand($command)
+	public function setPngConverter(PngConverter $pngConverter): self
 	{
-		$this->svg2pngCommand = $command;
+		$this->pngConverter = $pngConverter;
 
 		return $this;
 	}
 
 	/**
-	 * @param $output
+	 * @param mixed $output
 	 */
-	private function dumpDebug($output)
+	private function dumpDebug($output): void
 	{
 		if ($this->isDebug) {
 			echo '<pre>';
+			/** @noinspection ForgottenDebugOutputInspection */
 			var_dump($output);
 			echo '</pre>';
 		}
 	}
 
-	/**
-	 * @param $output
-	 */
-	private function echoDebug($output)
+	private function echoDebug(string $output): void
 	{
 		if ($this->isDebug) {
 			echo '<pre>';
 			echo $output;
 			echo '</pre>';
 		}
-	}
-
-	/**
-	 * @param string $svg
-	 * @param bool   $hasBaseline
-	 */
-	private function setSvgContent($svg, $hasBaseline)
-	{
-		// $svg = '...<!--start 19.8752 31.3399 -->...';
-
-		//                                    x        y
-		$hasStart = preg_match('#<!--start (-?[\d\.]+) (-?[\d\.]+) -->#', $svg, $matchStart);
-		//                                  x        y        w        h
-		$hasBbox = preg_match('#<!--bbox (-?[\d\.]+) (-?[\d\.]+) (-?[\d\.]+) (-?[\d\.]+) -->#', $svg, $matchBbox);
-
-		if ($hasStart && $hasBbox) {
-			// SVG contains info about image size and baseline position.
-			$rawHeight = $matchBbox[4];
-			$rawWidth  = $matchBbox[3];
-			$rawY      = $matchBbox[2];
-
-			$rawStartY = $matchStart[2];
-
-			// Typically $rawY < $rawStartY
-			$rawDepth = $hasBaseline ? min(0, $rawY - $rawStartY) + $rawHeight : $rawHeight * 0.5;
-
-			// Taking into account OUTER_SCALE since coordinates are in the internal scale.
-			$depth  = round(OUTER_SCALE * $rawDepth, self::SVG_PRECISION);
-			$height = round(OUTER_SCALE * $rawHeight, self::SVG_PRECISION);
-			$width  = round(OUTER_SCALE * $rawWidth, self::SVG_PRECISION);
-
-			// Embedding script providing that info to the parent.
-			$script = '<script type="text/ecmascript">if(window.parent.postMessage)window.parent.postMessage("' . $depth . '|' . $width . '|' . $height . '|"+window.location,"*");</script>' . "\n";
-			$svg    = str_replace('</svg>', $script . '</svg>', $svg);
-		}
-
-		$this->svg = $svg;
 	}
 }

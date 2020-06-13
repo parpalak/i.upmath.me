@@ -2,11 +2,21 @@
 /**
  * Entry point for rendering.
  *
- * @copyright 2014-2016 Roman Parpalak
+ * @copyright 2014-2020 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
  */
+
+use Katzgrau\KLogger\Logger;
+use S2\Tex\Cache\CacheProvider;
+use S2\Tex\Processor\CachedResponse;
+use S2\Tex\Processor\PostProcessor;
+use S2\Tex\Processor\Processor;
+use S2\Tex\Processor\Request;
+use S2\Tex\Renderer\PngConverter;
+use S2\Tex\Renderer\Renderer;
+use S2\Tex\Templater;
 
 require '../vendor/autoload.php';
 require '../config.php';
@@ -18,7 +28,7 @@ error_reporting($isDebug ? E_ALL : -1);
 define('LATEX_COMMAND', TEX_PATH . 'latex -output-directory=' . TMP_DIR);
 define('DVISVG_COMMAND', TEX_PATH . 'dvisvgm %1$s -o %1$s.svg -n --exact -v0 --relative --zoom=' . OUTER_SCALE);
 // define('DVIPNG_COMMAND', TEX_PATH . 'dvipng -T tight %1$s -o %1$s.png -D ' . (96 * OUTER_SCALE)); // outdated
-define('SVG2PNG_COMMAND', 'rsvg-convert %1$s.svg -d 96 -p 96 -b white'); // stdout
+define('SVG2PNG_COMMAND', 'rsvg-convert %1$s -d 96 -p 96 -b white'); // stdout
 
 define('SVGO', realpath(SVGO_PATH) . '/svgo -i %1$s -o %1$s.new; rm %1$s; mv %1$s.new %1$s');
 define('GZIP', 'gzip -cn6 %1$s > %1$s.gz.new; rm %1$s.gz; mv %1$s.gz.new %1$s.gz');
@@ -36,40 +46,49 @@ function error400($error = 'Invalid formula')
 ini_set('max_execution_time', 10);
 header('X-Powered-By: Upmath Latex Renderer');
 
-$templater = new \S2\Tex\Templater(TPL_DIR);
+$templater = new Templater(TPL_DIR);
 
-$renderer = new \S2\Tex\Renderer($templater, TMP_DIR, LATEX_COMMAND, DVISVG_COMMAND);
+$pngConverter = new PngConverter(SVG2PNG_COMMAND);
+$renderer     = new Renderer($templater, TMP_DIR, LATEX_COMMAND, DVISVG_COMMAND);
 $renderer
-	->setSVG2PNGCommand(SVG2PNG_COMMAND)
+	->setPngConverter($pngConverter)
 	->setIsDebug($isDebug)
 ;
 if (defined('LOG_DIR')) {
-	$renderer->setLogger(new \Katzgrau\KLogger\Logger(LOG_DIR));
+	$renderer->setLogger(new Logger(LOG_DIR));
 }
 
-$processor = new \S2\Tex\Processor($renderer, CACHE_SUCCESS_DIR, CACHE_FAIL_DIR);
-$processor
-	->addSVGCommand(SVGO)
-	->addSVGCommand(GZIP)
-	->addPNGCommand(OPTIPNG)
-	->addPNGCommand(PNGOUT)
-;
+$cacheProvider = new CacheProvider(CACHE_SUCCESS_DIR, CACHE_FAIL_DIR);
+$processor     = new Processor($renderer, $cacheProvider, $pngConverter);
 
 try {
-	$processor->parseURI(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-}
-catch (Exception $e) {
+	$request = Request::createFromUri(
+		parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+	);
+} catch (Exception $e) {
 	error400($isDebug ? $e->getMessage() : 'Invalid formula');
 	die;
 }
 
-if ($processor->prepareContent()) {
-	$processor->echoContent();
-}
-else {
-	error400($isDebug ? $processor->getError() : 'Invalid formula');
+$response = $processor->process($request);
+
+if (!$response->hasError()) {
+	$response->echoContent();
+} else {
+	error400($isDebug ? $response->getError() : 'Invalid formula');
 }
 
-if (!$isDebug) {
-	$processor->saveContent();
+if (!$isDebug && !($response instanceof CachedResponse)) {
+	// Disconnecting from web-server
+	flush();
+	fastcgi_finish_request();
+
+	$postProc = new PostProcessor($cacheProvider);
+	$postProc
+		->addSVGCommand(SVGO)
+		->addSVGCommand(GZIP)
+//		->addPNGCommand(OPTIPNG)
+//		->addPNGCommand(PNGOUT)
+	;
+	$postProc->cacheResponse($response);
 }

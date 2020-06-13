@@ -21,5 +21,5 @@ interface TemplaterInterface
 	 *
 	 * @return Formula
 	 */
-	public function run ($formula);
+	public function run(string $formula): Formula;
 }
