@@ -36,7 +36,7 @@ class PostProcessor
 		return $this;
 	}
 
-	public function cacheResponse(Response $response): void
+	public function cacheResponse(Response $response, string $errorPayload): void
 	{
 		$cacheName = $this->cacheProvider->cachePathFromRequest(
 			$response->getRequest(),
@@ -45,8 +45,7 @@ class PostProcessor
 
 		$content = $response->getContent();
 		if ($response->hasError()) {
-			// TODO
-			$content = $_SERVER['HTTP_REFERER'] . ' ' . $response->getRequest()->getExtension() . ': ' . $content;
+			$content = $errorPayload . ' ' . $response->getRequest()->getExtension() . ': ' . $content;
 		}
 
 		self::filePut($cacheName, $content);
