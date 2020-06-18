@@ -159,7 +159,7 @@ class Renderer implements RendererInterface
 		$this->dumpDebug($cmd);
 		$this->dumpDebug($svgOutput);
 
-		$svgContent = SvgHelper::processSvgContent(file_get_contents($tmpName . '.svg'), $formulaObj->hasBaseline());
+		$svgContent = SvgHelper::processSvgContent(file_get_contents($tmpName . '.svg'), $formulaObj->useBaseline());
 
 		if ($type === 'png') {
 			if ($this->pngConverter) {

@@ -11,12 +11,12 @@ namespace S2\Tex\Tpl;
 class Formula
 {
 	protected $text;
-	protected $hasBaseline;
+	protected $useBaseline;
 
-	public function __construct(string $text, bool $hasBaseline)
+	public function __construct(string $text, bool $useBaseline)
 	{
 		$this->text        = $text;
-		$this->hasBaseline = $hasBaseline;
+		$this->useBaseline = $useBaseline;
 	}
 
 	public function getText(): string
@@ -24,8 +24,8 @@ class Formula
 		return $this->text;
 	}
 
-	public function hasBaseline(): bool
+	public function useBaseline(): bool
 	{
-		return $this->hasBaseline;
+		return $this->useBaseline;
 	}
 }
