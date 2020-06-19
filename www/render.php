@@ -90,5 +90,5 @@ if (!$isDebug && !($response instanceof CachedResponse)) {
 //		->addPNGCommand(OPTIPNG)
 //		->addPNGCommand(PNGOUT)
 	;
-	$postProc->cacheResponse($response, $_SERVER['HTTP_REFERER']);
+	$postProc->cacheResponse($response, $_SERVER['HTTP_REFERER'] ?? 'no referer');
 }
