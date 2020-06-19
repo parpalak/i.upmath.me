@@ -10,6 +10,9 @@ namespace S2\Tex\Renderer;
 
 class SvgHelper
 {
+	private const POINTS_IN_PIXEL = 0.75;
+	private const TOP_SHIFT_RATIO = 0.5;
+
 	public static function processSvgContent(string $svg, bool $useBaseline): string
 	{
 		// $svg = '...<!--start 19.8752 31.3399 -->...';
@@ -58,7 +61,7 @@ class SvgHelper
 		 * OUTER_SCALE = 1.25 * 1.00375.
 		 * 3. Convert from points (pt) to pixels (px) by multiplier 4/3.
 		 */
-		$multiplier = 4.0 / 3.0 * OUTER_SCALE;
+		$multiplier = OUTER_SCALE / self::POINTS_IN_PIXEL;
 
 		$viewportFromBottomToBaseline = $multiplier * $userFromBottomToBaseline;
 		$viewportHeight               = $multiplier * $userHeight;
@@ -70,7 +73,7 @@ class SvgHelper
 		 */
 		$extendedViewportHeight               = ceil($viewportHeight);
 		$extendedViewportWidth                = ceil($viewportWidth);
-		$extendedViewportFromBottomToBaseline = $viewportFromBottomToBaseline + $extendedViewportHeight - $viewportHeight;
+		$extendedViewportFromBottomToBaseline = $viewportFromBottomToBaseline + (1 - self::TOP_SHIFT_RATIO) * ($extendedViewportHeight - $viewportHeight);
 
 		/**
 		 * 5. Extend the viewBox in the same proportion as the viewport to avoid the image deformation.
@@ -83,7 +86,7 @@ class SvgHelper
 			round($extendedViewportWidth, 6),
 			round($extendedViewportHeight, 6),
 			$userStartX,
-			$userStartY,
+			round($userStartY - self::TOP_SHIFT_RATIO * ($extendedUserHeight - $userHeight), 6),
 			round($extendedUserWidth, 6),
 			round($extendedUserHeight, 6)
 		), $svg);
@@ -91,9 +94,9 @@ class SvgHelper
 		// Embed script providing size info to the parent.
 		$script = sprintf(
 			'<script type="text/ecmascript">if(window.parent.postMessage)window.parent.postMessage("%s|%s|%s|"+window.location,"*");</script>',
-			round($extendedViewportFromBottomToBaseline * 0.75, 5),
-			round($extendedViewportWidth * 0.75, 5), // back to pt due to backward compatibility reasons for old version of latex.js
-			round($extendedViewportHeight * 0.75, 5)
+			round($extendedViewportFromBottomToBaseline * self::POINTS_IN_PIXEL, 5),
+			round($extendedViewportWidth * self::POINTS_IN_PIXEL, 5), // back to pt due to backward compatibility reasons for old version of latex.js
+			round($extendedViewportHeight * self::POINTS_IN_PIXEL, 5)
 		);
 
 		$svg = str_replace('</svg>', $script . "\n" . '</svg>', $svg);
