@@ -13,8 +13,6 @@ use S2\Tex\Cache\CacheProvider;
 
 class PostProcessor
 {
-	private $svgCommands = [];
-	private $pngCommands = [];
 	private $cacheProvider;
 
 	public function __construct(CacheProvider $cacheProvider)
@@ -22,21 +20,7 @@ class PostProcessor
 		$this->cacheProvider = $cacheProvider;
 	}
 
-	public function addSVGCommand(string $command): self
-	{
-		$this->svgCommands[] = $command;
-
-		return $this;
-	}
-
-	public function addPNGCommand(string $command): self
-	{
-		$this->pngCommands[] = $command;
-
-		return $this;
-	}
-
-	public function cacheResponse(Response $response, string $errorPayload): void
+	public function cacheResponseAndGetAsyncRequest(Response $response, string $errorPayload): ?Request
 	{
 		$cacheName = $this->cacheProvider->cachePathFromRequest(
 			$response->getRequest(),
@@ -52,19 +36,12 @@ class PostProcessor
 
 		if (!$response->hasError()) {
 			if ($response->isSvg()) {
-				// Optimizing SVG
-				foreach ($this->svgCommands as $command) {
-					shell_exec(sprintf($command, $cacheName));
-				}
-			}
-
-			if ($response->isPng()) {
-				// Optimizing PNG
-				foreach ($this->pngCommands as $command) {
-					shell_exec(sprintf($command, $cacheName));
-				}
+				// Optimize SVG in background, skip PNG optimization
+				return $response->getRequest();
 			}
 		}
+
+		return null;
 	}
 
 	/**

@@ -18,6 +18,10 @@ class Request
 
 	public function __construct(string $formula, string $extension)
 	{
+		if (!self::extensionIsValid($extension)) {
+			throw new \InvalidArgumentException('Incorrect output format has been requested. Expected SVG or PNG.');
+		}
+
 		$this->formula   = $formula;
 		$this->extension = $extension;
 	}
@@ -25,8 +29,8 @@ class Request
 	public static function createFromUri(string $uri): self
 	{
 		$parts = explode('/', $uri, 3);
-		if (count($parts) < 3 || !self::extensionIsValid($parts[1])) {
-			throw new \InvalidArgumentException('Incorrect output format has been requested. Expected SVG or PNG.');
+		if (count($parts) < 3) {
+			throw new \InvalidArgumentException('Incorrect input format.');
 		}
 
 		$extension = $parts[1];

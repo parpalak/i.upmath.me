@@ -8,6 +8,9 @@
  * @link      https://i.upmath.me
  */
 
+use hollodotme\FastCGI\Client;
+use hollodotme\FastCGI\Requests\PostRequest;
+use hollodotme\FastCGI\SocketConnections\UnixDomainSocket;
 use Katzgrau\KLogger\Logger;
 use S2\Tex\Cache\CacheProvider;
 use S2\Tex\Processor\CachedResponse;
@@ -30,11 +33,6 @@ define('DVISVG_COMMAND', TEX_PATH . 'dvisvgm %1$s -o %1$s.svg -n --exact -v0 --r
 // define('DVIPNG_COMMAND', TEX_PATH . 'dvipng -T tight %1$s -o %1$s.png -D ' . (96 * OUTER_SCALE)); // outdated
 define('SVG2PNG_COMMAND', 'rsvg-convert %1$s -d 96 -p 96 -b white'); // stdout
 
-define('SVGO', realpath(SVGO_PATH) . '/svgo -i %1$s -o %1$s.new; rm %1$s; mv %1$s.new %1$s');
-define('GZIP', 'gzip -cn6 %1$s > %1$s.gz.new; rm %1$s.gz; mv %1$s.gz.new %1$s.gz');
-define('OPTIPNG', 'optipng %1$s');
-define('PNGOUT', 'pngout %1$s');
-
 function error400($error = 'Invalid formula')
 {
 	header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
@@ -52,8 +50,8 @@ $pngConverter = new PngConverter(SVG2PNG_COMMAND);
 $renderer     = new Renderer($templater, TMP_DIR, LATEX_COMMAND, DVISVG_COMMAND);
 $renderer
 	->setPngConverter($pngConverter)
-	->setIsDebug($isDebug)
-;
+	->setIsDebug($isDebug);
+
 if (defined('LOG_DIR')) {
 	$renderer->setLogger(new Logger(LOG_DIR));
 }
@@ -83,12 +81,14 @@ if (!$isDebug && !($response instanceof CachedResponse)) {
 	flush();
 	fastcgi_finish_request();
 
-	$postProc = new PostProcessor($cacheProvider);
-	$postProc
-		->addSVGCommand(SVGO)
-		->addSVGCommand(GZIP)
-//		->addPNGCommand(OPTIPNG)
-//		->addPNGCommand(PNGOUT)
-	;
-	$postProc->cacheResponse($response, $_SERVER['HTTP_REFERER'] ?? 'no referer');
+	$postProc     = new PostProcessor($cacheProvider);
+	$asyncRequest = $postProc->cacheResponseAndGetAsyncRequest($response, $_SERVER['HTTP_REFERER'] ?? 'no referer');
+	if ($asyncRequest !== null) {
+		$connection = new UnixDomainSocket(FASTCGI_SOCKET, 1000, 1000);
+		$client     = new Client();
+		$content    = http_build_query(['formula' => $asyncRequest->getFormula(), 'extension' => $asyncRequest->getExtension()]);
+
+		$request = new PostRequest(realpath('cache_processor.php'), $content);
+		$client->sendAsyncRequest($connection, $request);
+	}
 }
