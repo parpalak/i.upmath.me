@@ -62,7 +62,7 @@
 
 	var aeImg = {};
 
-	function trackLoading(eImg, path) {
+	function trackLoading(eImg, path, isCentered) {
 		if (aeImg[path]) {
 			aeImg[path].push(eImg);
 		} else {
@@ -77,23 +77,22 @@
 
 					if (m && m[1]) {
 						s = m[1].split('|');
-						setSizes(path, s.shift(), s.shift(), s.shift());
+						setSizes(path, s.shift(), s.shift(), s.shift(), isCentered);
 					}
 				});
 		}
 	}
 
-	function setSizes(path, shift, x, y) {
+	function setSizes(path, shift, x, y, isCentered) {
 		var ao = aeImg[path], i = ao.length;
 
 		for (; i--;) {
-			ao[i].setAttribute('style', 'border:0; vertical-align:' + (ao[i].isCentered ? 'top;' : (-shift) + 'pt;'));
+			ao[i].setAttribute('style', 'border:0; vertical-align:' + (isCentered ? 'top; margin: 0 0 0 auto;' : (-shift) + 'pt;'));
 		}
 	}
 
 	function createImgNode(formula, isCentered) {
-		var s = (ext === 'svg'),
-			i = d.createElement('img'),
+		var i = d.createElement('img'),
 			path = url + '/' + ext + '/' + encodeURIComponent(formula);
 
 		i.setAttribute('src', path);
@@ -101,10 +100,10 @@
 		i.setAttribute('style', 'vertical-align:middle; border:0; opacity:0;');
 		i.setAttribute('alt', formula);
 
-		s && isCentered && (i.isCentered = 1);
+		isCentered && (i.style.margin = '0 0 0 auto');
 
 		try {
-			trackLoading(i, path);
+			trackLoading(i, path, isCentered);
 		} catch (e) {
 			i.style.opacity = '1';
 		}
@@ -139,10 +138,11 @@
 				eResult = createImgNode(as[1], 1);
 				eItem.insertBefore(eResult, eCur);
 				eItem.setAttribute('align', 'center');
+				eItem.setAttribute('style', 'display: flex; align-items: center; flex-wrap: wrap;');
 
 				var eSpan = d.createElement('span');
 				eSpan.appendChild(d.createTextNode(as[2]));
-				eSpan.setAttribute('style', 'float:right;');
+				eSpan.setAttribute('style', 'float:right; order: 1; margin: 0 0 0 auto;');
 
 				eItem.insertBefore(eSpan, eCur);
 				eItem.removeChild(eCur);
