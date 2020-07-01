@@ -69,10 +69,10 @@
 			aeImg[path] = [eImg];
 
 			fetch(path)
-				.then((resp) => {
+				.then(function (resp) {
 					return resp.text();
 				})
-				.then((text) => {
+				.then(function (text) {
 					var m = text.match(/postMessage\((?:&quot;|")([\d\|\.\-eE]*)(?:&quot;|")/), s;
 
 					if (m && m[1]) {
@@ -132,7 +132,7 @@
 
 			if (n === 3 &&
 				(/^[ \t]$/.test(as[0])) &&
-				(/(?:[ \t]*\([ \t]*\S+[ \t]*\))?[ \t]*/.test(as[2])) &&
+				(/^(?:[ \t]*\([ \t]*\S+[ \t]*\))?[ \t]*$/.test(as[2])) &&
 				eItem.tagName === 'P' && eItem.childNodes.length <= 2
 			) {
 				eResult = createImgNode(as[1], 1);
@@ -141,8 +141,8 @@
 				eItem.setAttribute('style', 'display: flex; align-items: center; flex-wrap: wrap;');
 
 				var eSpan = d.createElement('span');
-				eSpan.appendChild(d.createTextNode(as[2]));
 				eSpan.setAttribute('style', 'float:right; order: 1; margin: 0 0 0 auto;');
+				eSpan.appendChild(d.createTextNode(as[2]));
 
 				eItem.insertBefore(eSpan, eCur);
 				eItem.removeChild(eCur);
