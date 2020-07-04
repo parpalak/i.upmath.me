@@ -155,15 +155,14 @@
 						if (i + 1 < n) {
 							eResult = createImgNode(as[i]);
 
-							var after = as[i + 1].substring(0, 2);
-							if (/[,.;!?)] /.test(after)) {
-								as[i + 1] = as[i + 1].substring(1);
-
+							if (/^[,.;!?)\-]/.test(as[i + 1])) {
 								var nobr = d.createElement('span');
 								nobr.style.whiteSpace = 'pre';
 								nobr.appendChild(eResult);
 								eResult = nobr;
-								eResult.appendChild(d.createTextNode(after.substring(0, 1)));
+								eResult.appendChild(d.createTextNode(as[i + 1].substring(0, 1)));
+
+								as[i + 1] = as[i + 1].substring(1);
 							}
 						} else {
 							eResult = d.createTextNode('$$' + as[i]);
