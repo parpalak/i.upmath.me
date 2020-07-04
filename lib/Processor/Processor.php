@@ -62,7 +62,7 @@ class Processor
 
 			return new Response($request, $content, $modifiedAt);
 		} catch (\Exception $e) {
-			return new Response($request, null, null, $e->getMessage());
+			return new Response($request, '', null, $e->getMessage());
 		}
 	}
 }
