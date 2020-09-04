@@ -87,7 +87,10 @@
 		var ao = aeImg[path], i = ao.length;
 
 		for (; i--;) {
-			ao[i].setAttribute('style', 'border:0; vertical-align:' + (isCentered ? 'top; margin: 0 0 0 auto;' : (-shift) + 'pt;'));
+			ao[i].style.opacity = '1';
+			ao[i].style.width = 'calc(var(--latex-zoom, 1)*' + x + 'pt)';
+			ao[i].style.height = 'calc(var(--latex-zoom, 1)*' + y + 'pt)';
+			ao[i].style.verticalAlign = (isCentered ? 'top' : 'calc(var(--latex-zoom, 1)*' + (-shift) + 'pt)');
 		}
 	}
 
