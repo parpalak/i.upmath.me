@@ -105,7 +105,7 @@ a {
 	margin: 0 0 1em;
 	}
 	.sample-source {
-		font: 1em/1.2 Consolas, monospace;
+		font: 0.875em/1.2 Consolas, monospace;
 		white-space: pre;
 		white-space: pre-wrap;
 		}

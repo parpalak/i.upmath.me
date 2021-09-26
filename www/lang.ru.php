@@ -31,6 +31,7 @@ return [
 		'align'     => 'Многострочные формулы',
 		'picture'   => 'Картинки в окружении <code>picture</code>',
 		'xy-pics'   => 'Диаграммы <code>xy-pic</code>',
+		'tikz'      => 'Чертежи TikZ',
 	],
 	'faq section'         => '
 			<h2>Вопросы и ответы</h2>
@@ -67,7 +68,7 @@ return [
 				<h3>Как формулы превращаются в&nbsp;картинки?</h3>
 				<p>
 					На&nbsp;сервере установлен <a href="https://ru.wikipedia.org/wiki/TeX_Live">Tex Live</a>.
-					Он работает <a href="https://written.ru/articles/technologies/site_building/latex_for_web">
+					Он работает <a href="https://parpalak.com/articles/technologies/site_building/latex_for_web">
 					в&nbsp;связке с&nbsp;современными веб-технологиями</a>.
 				</p>
 			</div>
@@ -113,13 +114,13 @@ return [
 				<p align="center"><img src="/i/baseline.png" alt="" width="400" height="230" class="screenshot" style="max-width: 90vw; max-height: 51.75vw;" /></p>
 			</div>
 			<p>
-				На этом сервисе работает <a href="http://susy.written.ru/">блог о&nbsp;теоретической физике</a>.
+				На этом сервисе работает мой <a href="https://susy.page/">блог о&nbsp;теоретической физике</a>.
 			</p>
 			</div>
 	',
 	'copyright section'   => <<<TEXT
-				&copy; <a href="https://written.ru/">Роман Парпалак</a>, 2014&ndash;2020.
-				<script>var mailto="roman%"+"40written.ru";document.write('Пишите: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
+				&copy; <a href="https://parpalak.com/">Роман Парпалак</a>, 2014&ndash;2020.
+				<script>var mailto="roman%"+"40parpalak.com";document.write('Пишите: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
 				&nbsp; &nbsp;
 				<div class="likely" data-url="http://tex.s2cms.ru/">
 					<div class="facebook" title="Поделиться ссылкой на Фейсбуке">&nbsp;</div>

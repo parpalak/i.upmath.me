@@ -31,6 +31,7 @@ return [
 		'align'     => 'Multiline equations',
 		'picture'   => '<code>Picture</code> environment',
 		'xy-pics'   => 'Diagrams <code>xy-pic</code>',
+		'tikz'      => 'TikZ graphics',
 	],
 	'faq section'         => '
 			<h2>FAQ</h2>
@@ -110,13 +111,13 @@ return [
 			</div>
 
 			<p>
-				Our <a href="http://susy.written.ru/">blog on theoretical physics</a> is based on this service.
+				My <a href="https://susy.page/">blog on theoretical physics</a> is based on this service.
 			</p>
 			</div>
 	',
 	'copyright section'   => <<<TEXT
-				&copy; 2014&ndash;2020 <a href="https://written.ru/">Roman Parpalak</a>.
-				<script>var mailto="roman%"+"40written.ru";document.write('Drop&nbsp;me&nbsp;a&nbsp;line: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
+				&copy; 2014&ndash;2020 <a href="https://parpalak.com/">Roman Parpalak</a>.
+				<script>var mailto="roman%"+"40parpalak.com";document.write('Drop&nbsp;me&nbsp;a&nbsp;line: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
 				&nbsp; &nbsp;
 				<div class="likely" data-url="https://i.upmath.me/">
 					<div class="facebook" title="Share">&nbsp;</div>

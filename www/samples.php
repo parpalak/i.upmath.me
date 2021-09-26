@@ -29,6 +29,15 @@ $samples['limits'] = ['height' => '55.3984px', 'text' => <<<'TEX'
 TEX
 ];
 
+$samples['align'] = ['height' => '99.1797px', 'text' => <<<'TEX'
+\begin{align*}
+ y &= x^4 + 4 =\\
+   &= (x^2+2)^2 - 4x^2 \le\\
+   &\le (x^2+2)^2
+\end{align*}
+TEX
+];
+
 $samples['matrices'] = ['height' => '99.1797px', 'text' => <<<'TEX'
 A_{m,n} = \begin{pmatrix}
 a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
@@ -36,15 +45,6 @@ a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
 \vdots  & \vdots  & \ddots & \vdots  \\
 a_{m,1} & a_{m,2} & \cdots & a_{m,n}
 \end{pmatrix}
-TEX
-];
-
-$samples['align'] = ['height' => '99.1797px', 'text' => <<<'TEX'
-\begin{align*}
- y &= x^4 + 4 =\\
-   &= (x^2+2)^2 - 4x^2 \le\\
-   &\le (x^2+2)^2
-\end{align*}
 TEX
 ];
 
@@ -77,6 +77,19 @@ $samples['xy-pics'] = ['height' => '98.0938px', 'text' => <<<'TEX'
   D \ar[r]_{f'} &
   C
 }
+TEX
+];
+
+$samples['tikz'] = ['height' => '107px', 'text' => <<<'TEX'
+\begin{tikzpicture}\small
+\def\r{1.8}
+\coordinate[label=$A$] (A) at (0.5*\r,0.8*\r);
+\coordinate[label=below:$B$] (B) at (-\r,0);
+\coordinate[label=below:$C$] (C) at (\r,0);
+\draw[thin] (A) -- node[above] {$c$}
+   node[pos=0.03,below,inner sep=4] {$\alpha$}
+   (B) -- (C) -- node[right] {$b$} (A);
+\end{tikzpicture}
 TEX
 ];
 
