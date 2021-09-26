@@ -9,31 +9,32 @@
  */
 
 return [
-	'title'               => 'Картинки для веба из формул на латехе',
-	'meta-keywords'       => 'LaTeX, латех, формулы, SVG-картинки, конвертировать формулы на летехе в картинки',
-	'meta-description'    => 'Сервис преобразует формулы на латехе в картинки для публикации в интернете.',
-	'header'              => 'Картинки для&nbsp;веба из&nbsp;формул на&nbsp;латехе',
-	'equation editor'     => 'Редактор формул',
-	'formula in latex'    => 'Формула на латехе',
-	'image URL'           => 'Адрес&nbsp;картинки:&nbsp;',
-	'examples'            => 'Примеры',
-	'examples info'       => 'Слева &mdash; образцы кода на латехе, справа &mdash; результат.',
-	'add to editor'       => 'Добавить в редактор',
-	'link-s2'             => '&larr; Движок S2',
-	'link-faq'            => 'Вопросы и ответы',
-	'link-install'        => 'Установка на сайты',
-	'page-editor'         => 'Upmath: редактор текстов',
-	'samples'             => [
-		'integrals' => 'Интегралы, корни и рамки',
-		'limits'    => 'Пределы и суммы',
-		'chains'    => 'Цепные дроби',
-		'matrices'  => 'Матрицы',
-		'align'     => 'Многострочные формулы',
-		'picture'   => 'Картинки в окружении <code>picture</code>',
-		'xy-pics'   => 'Диаграммы <code>xy-pic</code>',
-		'tikz'      => 'Чертежи TikZ',
+	'title'                 => 'Картинки для веба из формул на латехе',
+	'meta-keywords'         => 'LaTeX, латех, формулы, SVG-картинки, конвертировать формулы на летехе в картинки',
+	'meta-description'      => 'Сервис преобразует формулы на латехе в картинки для публикации в интернете.',
+	'header'                => 'Картинки для&nbsp;веба из&nbsp;формул на&nbsp;латехе',
+	'equation editor'       => 'Редактор формул',
+	'formula in latex'      => 'Формула на латехе',
+	'image URL'             => 'Адрес&nbsp;картинки:&nbsp;',
+	'examples'              => 'Примеры',
+	'examples info'         => 'Слева &mdash; образцы кода на латехе, справа &mdash; результат.',
+	'add to editor'         => 'Добавить в редактор',
+	'link-s2'               => '&larr; Движок S2',
+	'link-faq'              => 'Вопросы и ответы',
+	'link-install'          => 'Установка на сайты',
+	'page-editor'           => 'Upmath: редактор текстов',
+	'samples'               => [
+		'integrals'  => 'Интегралы, корни и рамки',
+		'limits'     => 'Пределы и суммы',
+		'chains'     => 'Цепные дроби',
+		'matrices'   => 'Матрицы',
+		'align'      => 'Многострочные формулы',
+		'picture'    => 'Картинки в окружении <code>picture</code>',
+		'xy-pics'    => 'Диаграммы <code>xy-pic</code>',
+		'tikz'       => 'Чертежи TikZ',
+		'tikz-plots' => 'Графики TikZ',
 	],
-	'faq section'         => '
+	'faq section'           => '
 			<h2>Вопросы и ответы</h2>
 
 			<div class="info-text">
@@ -91,7 +92,7 @@ return [
 			</div>
 			</div>
 	',
-	'embedding section 1' => '
+	'embedding section 1'   => '
 			<h2>Встраивание математических формул на&nbsp;сайты</h2>
 
 			<div class="info-text">
@@ -100,13 +101,13 @@ return [
 				Чтобы при&nbsp;загрузке сайта формулы заменялись картинками, их нужно писать в&nbsp;двойных долларах: <code><span>$$</span>...$$</code>, и&nbsp;в&nbsp;исходном коде страниц подключать скрипт
 			</p>
 	',
-	'embedding section 2' => '
+	'embedding section 2'   => '
 			<p>Пример html-кода:</p>
 	',
 	'embedding section 2.1' => '
 			<p>Получившийся результат:</p>
 	',
-	'embedding section 3' => '
+	'embedding section 3'   => '
 			<div class="question">
 				<p>В современных браузерах скрипт загружает векторные картинки в&nbsp;формате SVG
 				и&nbsp;выравнивает базовые линии формул и&nbsp;окружающего текста:</p>
@@ -118,7 +119,7 @@ return [
 			</p>
 			</div>
 	',
-	'copyright section'   => <<<TEXT
+	'copyright section'     => <<<TEXT
 				&copy; <a href="https://parpalak.com/">Роман Парпалак</a>, 2014&ndash;2020.
 				<script>var mailto="roman%"+"40parpalak.com";document.write('Пишите: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
 				&nbsp; &nbsp;

@@ -9,31 +9,32 @@
  */
 
 return [
-	'title'               => 'LaTeX equations for web',
-	'meta-keywords'       => 'LaTeX, equations, SVG-images, formula, convert latex equations to images',
-	'meta-description'    => 'Convert LaTeX equations to SVG images ready for publishing on the web.',
-	'header'              => 'LaTeX equations for&nbsp;web',
-	'equation editor'     => 'Online editor',
-	'formula in latex'    => 'LaTeX expression',
-	'image URL'           => 'Image&nbsp;URL:&nbsp;',
-	'examples'            => 'Examples',
-	'examples info'       => 'Here are LaTeX source examples and rendered pictures.',
-	'add to editor'       => 'Add to editor',
-	'link-s2'             => '&larr; S2 CMS',
-	'link-faq'            => 'FAQ',
-	'link-install'        => 'Embedding',
-	'page-editor'         => 'Upmath: Markdown & LaTeX',
-	'samples'             => [
-		'integrals' => 'Integrals, roots and borders',
-		'limits'    => 'Limits and sums',
-		'chains'    => 'Continued fractions',
-		'matrices'  => 'Matrices',
-		'align'     => 'Multiline equations',
-		'picture'   => '<code>Picture</code> environment',
-		'xy-pics'   => 'Diagrams <code>xy-pic</code>',
-		'tikz'      => 'TikZ graphics',
+	'title'                 => 'LaTeX equations for web',
+	'meta-keywords'         => 'LaTeX, equations, SVG-images, formula, convert latex equations to images',
+	'meta-description'      => 'Convert LaTeX equations to SVG images ready for publishing on the web.',
+	'header'                => 'LaTeX equations for&nbsp;web',
+	'equation editor'       => 'Online editor',
+	'formula in latex'      => 'LaTeX expression',
+	'image URL'             => 'Image&nbsp;URL:&nbsp;',
+	'examples'              => 'Examples',
+	'examples info'         => 'Here are LaTeX source examples and rendered pictures.',
+	'add to editor'         => 'Add to editor',
+	'link-s2'               => '&larr; S2 CMS',
+	'link-faq'              => 'FAQ',
+	'link-install'          => 'Embedding',
+	'page-editor'           => 'Upmath: Markdown & LaTeX',
+	'samples'               => [
+		'integrals'  => 'Integrals, roots and borders',
+		'limits'     => 'Limits and sums',
+		'chains'     => 'Continued fractions',
+		'matrices'   => 'Matrices',
+		'align'      => 'Multiline equations',
+		'picture'    => '<code>Picture</code> environment',
+		'xy-pics'    => 'Diagrams <code>xy-pic</code>',
+		'tikz'       => 'TikZ graphics',
+		'tikz-plots' => 'TikZ plots',
 	],
-	'faq section'         => '
+	'faq section'           => '
 			<h2>FAQ</h2>
 
 			<div class="info-text">
@@ -87,7 +88,7 @@ return [
 			</div>
 			</div>
 	',
-	'embedding section 1' => '
+	'embedding section 1'   => '
 			<h2>Embedding into websites</h2>
 
 			<div class="info-text">
@@ -97,13 +98,13 @@ return [
 				<code><span>$$</span>...$$</code>, and the following script must be included:
 			</p>
 	',
-	'embedding section 2' => '
+	'embedding section 2'   => '
 			<p>Here is the HTML code sample:</p>
 	',
 	'embedding section 2.1' => '
 			<p>The rendered result:</p>
 	',
-	'embedding section 3' => '
+	'embedding section 3'   => '
 			<div class="question">
 				<p>In modern browsers, script loads pictures in vector format SVG and aligns formula baseline with surrounding text:</p>
 
@@ -115,7 +116,7 @@ return [
 			</p>
 			</div>
 	',
-	'copyright section'   => <<<TEXT
+	'copyright section'     => <<<TEXT
 				&copy; 2014&ndash;2020 <a href="https://parpalak.com/">Roman Parpalak</a>.
 				<script>var mailto="roman%"+"40parpalak.com";document.write('Drop&nbsp;me&nbsp;a&nbsp;line: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
 				&nbsp; &nbsp;

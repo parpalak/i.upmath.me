@@ -93,6 +93,17 @@ $samples['tikz'] = ['height' => '107px', 'text' => <<<'TEX'
 TEX
 ];
 
+$samples['tikz-plots'] = ['height' => '133px', 'text' => <<<'TEX'
+\begin{tikzpicture}[domain=0:2]
+\draw[very thin] (-0.1,-0.1) grid (2.1,2.1);
+\draw[->] (-0.2,0)--(2.2,0) node[right] {$x$};
+\draw[->] (0,-0.2)--(0,2.2) node[above] {$y$};
+\draw plot (\x,{sin(\x r)}) node[right] {$y=\sin x$};
+\draw[color=blue] plot (\x,\x) node[right] {$y=x$};
+\end{tikzpicture}
+TEX
+];
+
 ob_start();
 ?>
 <p>Магнитный момент $$\vec{\mathfrak{m}}$$, находящийся в начале координат, создает в точке $$\vec{R}_0$$ векторный потенциал</p>
