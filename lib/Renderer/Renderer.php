@@ -107,7 +107,7 @@ class Renderer implements RendererInterface
 		file_put_contents($tmpName, $texSource);
 
 		// See https://github.com/symfony/symfony/issues/5030 for 'exec' hack
-		$process = new Process('exec ' . $this->latexCommand . ' ' . $tmpName . ' 2>&1');
+		$process = Process::fromShellCommandline('exec ' . $this->latexCommand . ' ' . $tmpName . ' 2>&1');
 		$process->setTimeout(8);
 
 		try {
