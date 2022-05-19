@@ -6,8 +6,8 @@
  * External binaries
  */
 
-define('TEX_PATH', '/home/tex/tl-2013/bin/i386-linux/');
-define('SVGO_PATH', '../node_modules/svgo/bin');
+define('TEX_PATH', '/var/www/u_tex/tl-2020/bin/x86_64-linux/');
+define('SVGO_PATH', __DIR__.'/node_modules/svgo/bin');
 
 /**
  * Setting up directories
@@ -15,15 +15,15 @@ define('SVGO_PATH', '../node_modules/svgo/bin');
  */
 
 // LaTeX document templates
-define('TPL_DIR', '../tpl/');
+define('TPL_DIR', __DIR__.'/tpl/');
 
 // Render errors log
-define('LOG_DIR', '../tex_logs');
+define('LOG_DIR', __DIR__.'/tex_logs');
 
 // Cache and temp dirs
 define('TMP_DIR', 'tmp/');
-define('CACHE_SUCCESS_DIR', '_cache/');
-define('CACHE_FAIL_DIR', '_error/');
+define('CACHE_SUCCESS_DIR', __DIR__.'/www/_cache/');
+define('CACHE_FAIL_DIR', __DIR__.'/www/_error/');
 
 /**
  * Setting up rendering scale
