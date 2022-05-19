@@ -88,7 +88,7 @@ if (!$isDebug && !($response instanceof CachedResponse)) {
 		$client     = new Client();
 		$content    = http_build_query(['formula' => $asyncRequest->getFormula(), 'extension' => $asyncRequest->getExtension()]);
 
-		$request = new PostRequest(realpath('cache_processor.php'), $content);
+		$request = new PostRequest(realpath('../cache_processor.php'), $content);
 		$client->sendAsyncRequest($connection, $request);
 	}
 }

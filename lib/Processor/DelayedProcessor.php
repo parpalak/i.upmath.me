@@ -42,6 +42,8 @@ class DelayedProcessor
 			foreach ($this->svgCommands as $command) {
 				shell_exec(sprintf($command, $this->cacheProvider->cachePathFromRequest($request, false)));
 			}
+
+			return;
 		}
 
 		if ($request->getExtension() === Request::PNG) {
@@ -49,8 +51,14 @@ class DelayedProcessor
 			foreach ($this->pngCommands as $command) {
 				shell_exec(sprintf($command, $this->cacheProvider->cachePathFromRequest($request, false)));
 			}
+
+			return;
 		}
 
-		throw new \InvalidArgumentException('Unknown type "%s" for delayed processing.');
+		throw new \InvalidArgumentException(sprintf(
+			'Unknown type "%s" for delayed processing. [%s]',
+			$request->getExtension(),
+			var_export($request, true)
+		));
 	}
 }

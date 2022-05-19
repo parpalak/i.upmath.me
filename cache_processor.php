@@ -8,8 +8,8 @@
  * @link      https://i.upmath.me
  */
 
-require '../vendor/autoload.php';
-require '../config.php';
+require 'vendor/autoload.php';
+require 'config.php';
 
 define('SVGO', realpath(SVGO_PATH) . '/svgo -i %1$s -o %1$s.new; rm %1$s; mv %1$s.new %1$s');
 define('GZIP', 'gzip -cn6 %1$s > %1$s.gz.new; rm %1$s.gz; mv %1$s.gz.new %1$s.gz');
