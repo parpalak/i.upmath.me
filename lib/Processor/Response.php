@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020 Roman Parpalak
+ * @copyright 2020-2022 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -10,10 +10,10 @@ namespace S2\Tex\Processor;
 
 class Response
 {
-	private $request;
-	private $content;
-	private $errorMessage;
-	private $modifiedAt;
+	private Request $request;
+	private string $content;
+	private ?string $errorMessage;
+	private ?int $modifiedAt;
 
 	public function __construct(Request $request, string $content, ?int $modifiedAt = null, ?string $errorMessage = null)
 	{

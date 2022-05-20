@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020 Roman Parpalak
+ * @copyright 2020-2022 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -10,8 +10,8 @@ namespace S2\Tex\Tpl;
 
 class Formula
 {
-	protected $text;
-	protected $useBaseline;
+	protected string $text;
+	protected bool $useBaseline;
 
 	public function __construct(string $text, bool $useBaseline)
 	{

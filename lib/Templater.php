@@ -2,7 +2,7 @@
 /**
  * Makes latex documents containing a formula.
  *
- * @copyright 2015-2020 Roman Parpalak
+ * @copyright 2015-2022 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -14,15 +14,17 @@ use S2\Tex\Tpl\Formula;
 
 class Templater implements TemplaterInterface
 {
-	private $dir;
+	private string $dir;
 
-	public function __construct($dir)
+	public function __construct(string $dir)
 	{
 		$this->dir = $dir;
 	}
 
 	/**
 	 * {@inheritdoc}
+	 * @noinspection OnlyWritesOnParameterInspection
+	 * @noinspection PhpArrayWriteIsNotUsedInspection
 	 */
 	public function run(string $formula): Formula
 	{
@@ -91,7 +93,6 @@ class Templater implements TemplaterInterface
 
 		// Other setup
 		if (0 === strpos($formula, '\\inline')) {
-			/** @noinspection PhpUnusedLocalVariableInspection */
 			$formula = '\\textstyle ' . substr($formula, 7);
 		}
 
@@ -100,7 +101,6 @@ class Templater implements TemplaterInterface
 		ob_start();
 		/** @noinspection PhpIncludeInspection */
 		include $this->dir . $tpl . '.php';
-		/** @noinspection PhpUnusedLocalVariableInspection */
 		$documentContent = ob_get_clean();
 
 		ob_start();

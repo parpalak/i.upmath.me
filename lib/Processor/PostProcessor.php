@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020 Roman Parpalak
+ * @copyright 2020-2022 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -13,7 +13,7 @@ use S2\Tex\Cache\CacheProvider;
 
 class PostProcessor
 {
-	private $cacheProvider;
+	private CacheProvider $cacheProvider;
 
 	public function __construct(CacheProvider $cacheProvider)
 	{

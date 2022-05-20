@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020 Roman Parpalak
+ * @copyright 2020-2022 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -12,8 +12,8 @@ use S2\Tex\Processor\Request;
 
 class CacheProvider
 {
-	protected $cacheFailDir;
-	protected $cacheSuccessDir;
+	protected string $cacheFailDir;
+	protected string $cacheSuccessDir;
 
 	public function __construct(string $cacheSuccessDir, string $cacheFailDir)
 	{

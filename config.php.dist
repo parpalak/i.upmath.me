@@ -11,7 +11,7 @@ define('SVGO_PATH', __DIR__.'/node_modules/svgo/bin');
 
 /**
  * Setting up directories
- * Relative to www/render.php
+ * Must be absolute
  */
 
 // LaTeX document templates

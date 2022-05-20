@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020 Roman Parpalak
+ * @copyright 2020-2022 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -13,8 +13,8 @@ class Request
 	public const SVG = 'svg';
 	public const PNG = 'png';
 
-	protected $extension;
-	protected $formula;
+	protected string $extension;
+	protected string $formula;
 
 	public function __construct(string $formula, string $extension)
 	{

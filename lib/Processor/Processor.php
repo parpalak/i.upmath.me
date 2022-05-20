@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2014-2020 Roman Parpalak
+ * @copyright 2014-2022 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -18,9 +18,9 @@ use S2\Tex\Renderer\RendererInterface;
  */
 class Processor
 {
-	private $renderer;
-	private $cacheProvider;
-	private $pngConverter;
+	private RendererInterface $renderer;
+	private CacheProvider $cacheProvider;
+	private PngConverter $pngConverter;
 
 	public function __construct(
 		RendererInterface $renderer,

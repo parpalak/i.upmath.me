@@ -2,7 +2,7 @@
 /**
  * Test infrastructure.
  *
- * @copyright 2015-2020 Roman Parpalak
+ * @copyright 2015-2022 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -14,13 +14,9 @@ use S2\Tex\Renderer\RendererInterface;
 
 class Tester
 {
-	private $srcTemplate = 'src/*.tex';
-	private $outDir      = '../www/test_out/';
-
-	/**
-	 * @var RendererInterface
-	 */
-	private $renderer;
+	private string $srcTemplate = 'src/*.tex';
+	private string $outDir      = '../www/test_out/';
+	private RendererInterface $renderer;
 
 	public function __construct(RendererInterface $renderer, string $srcTpl, string $outDir)
 	{

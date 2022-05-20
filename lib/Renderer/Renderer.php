@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2014-2020 Roman Parpalak
+ * @copyright 2014-2022 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -9,6 +9,7 @@
 namespace S2\Tex\Renderer;
 
 use Psr\Log\LoggerInterface;
+use S2\Tex\Helper;
 use S2\Tex\TemplaterInterface;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
@@ -18,46 +19,24 @@ use Symfony\Component\Process\Process;
  */
 class Renderer implements RendererInterface
 {
-	/**
-	 * @var TemplaterInterface
-	 */
-	private $templater;
-
-	/**
-	 * @var PngConverter
-	 */
-	protected $pngConverter;
-
-	/**
-	 * @var LoggerInterface
-	 */
-	private $logger;
-
-	/**
-	 * @var string
-	 */
-	protected $tmpDir;
-
-	/**
-	 * @var bool
-	 */
-	private $isDebug = false;
-
-	private $latexCommand;
-	private $pngCommand;
-	private $svgCommand;
+	private TemplaterInterface $templater;
+	private ?PngConverter $pngConverter;
+	private ?LoggerInterface $logger;
+	private string $tmpDir;
+	private bool $isDebug = false;
+	private string $latexCommand;
+	private string $svgCommand;
+	private ?string $pngCommand;
 
 	public function __construct(
 		TemplaterInterface $templater,
-		string $tmpDir,
-		string $latexCommand,
-		string $svgCommand,
-		?string $pngCommand = null
+		string             $tmpDir,
+		string             $latexCommand,
+		string             $svgCommand,
+		?string            $pngCommand = null
 	) {
-		$this->templater = $templater;
-
-		$this->tmpDir = $tmpDir;
-
+		$this->templater    = $templater;
+		$this->tmpDir       = $tmpDir;
 		$this->latexCommand = $latexCommand;
 		$this->svgCommand   = $svgCommand;
 		$this->pngCommand   = $pngCommand;
@@ -77,17 +56,11 @@ class Renderer implements RendererInterface
 		return $this;
 	}
 
-	private function validateFormula(string $formula): void
+	public function setPngConverter(PngConverter $pngConverter): self
 	{
-		foreach (['\\write', '\\input', '\\usepackage', '\\special'] as $disabledCommand) {
-			if (strpos($formula, $disabledCommand) !== false) {
-				if ($this->logger !== null) {
-					$this->logger->error(sprintf('Forbidden command "%s": ', $disabledCommand), [$formula]);
-					$this->logger->error('Server vars: ', $_SERVER);
-				}
-				throw new \RuntimeException('Forbidden commands.');
-			}
-		}
+		$this->pngConverter = $pngConverter;
+
+		return $this;
 	}
 
 	/**
@@ -111,7 +84,11 @@ class Renderer implements RendererInterface
 		$process->setTimeout(8);
 
 		try {
-			$exitCode = $process->run();
+			$exitCode = Helper::newRelicProfileDataStore(
+				static fn() => $process->run(),
+				'shell',
+				Helper::getShortCommandName($this->latexCommand)
+			);
 		} catch (\Exception $e) {
 			if ($this->logger !== null) {
 				$message = $e instanceof ProcessTimedOutException ? 'Latex has been interrupted by a timeout' : 'Cannot run Latex';
@@ -123,13 +100,13 @@ class Renderer implements RendererInterface
 			}
 			$this->dumpDebug($texSource);
 			$this->cleanupTempFiles($tmpName);
+
 			throw $e;
 		}
 
 		if ($this->isDebug) {
 			echo '<pre>';
 			readfile($tmpName . '.log');
-			/** @noinspection ForgottenDebugOutputInspection */
 			var_dump('exitcode', $exitCode);
 			echo '</pre>';
 		}
@@ -154,7 +131,11 @@ class Renderer implements RendererInterface
 
 		// DVI -> SVG
 		$cmd       = sprintf($this->svgCommand, $tmpName);
-		$svgOutput = shell_exec($cmd);
+		$svgOutput = Helper::newRelicProfileDataStore(
+			static fn() => shell_exec($cmd),
+			'shell',
+			Helper::getShortCommandName($cmd)
+		);
 
 		$this->dumpDebug($cmd);
 		$this->dumpDebug($svgOutput);
@@ -168,7 +149,11 @@ class Renderer implements RendererInterface
 			}
 			if ($this->pngCommand) {
 				// DVI -> PNG
-				exec(sprintf($this->pngCommand, $tmpName));
+				Helper::newRelicProfileDataStore(
+					static fn() => exec(sprintf($this->pngCommand, $tmpName)),
+					'shell',
+					Helper::getShortCommandName($this->pngCommand)
+				);
 				$pngContent = file_get_contents($tmpName . '.png');
 			}
 		}
@@ -186,13 +171,6 @@ class Renderer implements RendererInterface
 		}
 	}
 
-	public function setPngConverter(PngConverter $pngConverter): self
-	{
-		$this->pngConverter = $pngConverter;
-
-		return $this;
-	}
-
 	/**
 	 * @param mixed $output
 	 */
@@ -200,7 +178,6 @@ class Renderer implements RendererInterface
 	{
 		if ($this->isDebug) {
 			echo '<pre>';
-			/** @noinspection ForgottenDebugOutputInspection */
 			var_dump($output);
 			echo '</pre>';
 		}
@@ -212,6 +189,19 @@ class Renderer implements RendererInterface
 			echo '<pre>';
 			echo $output;
 			echo '</pre>';
+		}
+	}
+
+	private function validateFormula(string $formula): void
+	{
+		foreach (['\\write', '\\input', '\\usepackage', '\\special'] as $disabledCommand) {
+			if (strpos($formula, $disabledCommand) !== false) {
+				if ($this->logger !== null) {
+					$this->logger->error(sprintf('Forbidden command "%s": ', $disabledCommand), [$formula]);
+					$this->logger->error('Server vars: ', $_SERVER);
+				}
+				throw new \RuntimeException('Forbidden commands.');
+			}
 		}
 	}
 }
