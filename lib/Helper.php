@@ -25,6 +25,6 @@ class Helper
 
 	public static function getShortCommandName(string $fullCommandName): string
 	{
-		return explode(' ', basename($fullCommandName))[0];
+		return basename(explode(' ', $fullCommandName)[0]);
 	}
 }

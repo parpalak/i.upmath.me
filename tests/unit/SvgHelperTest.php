@@ -2,9 +2,10 @@
 
 namespace S2\Tex\Test\unit;
 
+use Codeception\Test\Unit;
 use S2\Tex\Renderer\SvgHelper;
 
-class SvgHelperTest extends \Codeception\Test\Unit
+class SvgHelperTest extends Unit
 {
     /**
      * @var \UnitTester
