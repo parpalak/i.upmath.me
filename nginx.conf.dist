@@ -7,7 +7,11 @@ upstream php-tex-sock {
 }
 
 server {
-	listen   80;
+	listen 80;
+    listen [::]:80;
+#    listen 443 ssl http2;
+#    listen [::]:443 ssl http2;
+
 	server_name  i.upmath.me;
 
 	root   /var/www/i.upmath.me/www;
@@ -21,7 +25,7 @@ server {
 
 		add_header 'Access-Control-Allow-Origin' '*' always;
 		add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS' always;
-		
+
 		#expires 1d;
 
 		set_by_lua $file_path '
@@ -43,18 +47,28 @@ server {
 		gzip_static   on;
 		gzip_vary     on;
 		gzip_proxied  expired no-cache no-store private auth;
+
+		expires 1d;
 	}
 
 	location /css {
 		gzip_static   on;
 		gzip_vary     on;
 		gzip_proxied  expired no-cache no-store private auth;
+
+		expires 1d;
+	}
+
+	location /i/ {
+		expires 1d;
 	}
 
 	location /js {
 		gzip_static   on;
 		gzip_vary     on;
 		gzip_proxied  expired no-cache no-store private auth;
+
+        expires 1d;
 	}
 
 	location / {
@@ -76,5 +90,18 @@ server {
 		fastcgi_pass    php-tex-sock;
 		fastcgi_param   SCRIPT_FILENAME $document_root/render.php;
 		fastcgi_param   SCRIPT_NAME /render.php;
+
+        fastcgi_cache i_upmath;
+        fastcgi_cache_valid 200 10m;
+        fastcgi_cache_methods GET HEAD;
+        fastcgi_cache_lock on;
+        fastcgi_cache_lock_age 9s;
+        fastcgi_cache_lock_timeout 9s;
+
+        fastcgi_buffers 8 16k;
+        fastcgi_buffer_size 32k;
+        fastcgi_connect_timeout 90;
+        fastcgi_send_timeout 90;
+        fastcgi_read_timeout 300;
 	}
 }
