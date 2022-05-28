@@ -8,8 +8,8 @@
 
 namespace S2\Tex\Processor;
 
-
 use S2\Tex\Cache\CacheProvider;
+use S2\Tex\Helper;
 
 class PostProcessor
 {
@@ -32,7 +32,7 @@ class PostProcessor
 			$content = $errorPayload . ' ' . $response->getRequest()->getExtension() . ': ' . $content;
 		}
 
-		self::filePut($cacheName, $content);
+		Helper::filePut($cacheName, $content);
 
 		if (!$response->hasError()) {
 			if ($response->isSvg()) {
@@ -42,31 +42,5 @@ class PostProcessor
 		}
 
 		return null;
-	}
-
-	/**
-	 * Wrapper for file_put_contents()
-	 *
-	 * 1. Creates parent directories if they do not exist.
-	 * 2. Uses atomic rename operation to avoid using partial content and race conditions.
-	 *
-	 * @param string $filename
-	 * @param string $content
-	 */
-	private static function filePut(string $filename, string $content): void
-	{
-		$dir = dirname($filename);
-		if (!file_exists($dir) && !mkdir($dir, 0777, true) && !is_dir($dir)) {
-			throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
-		}
-
-		$tmpFilename = $filename . '.temp';
-
-		file_put_contents($tmpFilename, $content);
-
-		if (!@rename($tmpFilename, $filename)) {
-			@unlink($filename);
-			@rename($tmpFilename, $filename);
-		}
 	}
 }

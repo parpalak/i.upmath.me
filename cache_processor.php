@@ -2,7 +2,7 @@
 /**
  * Entry point for async cache optimizer.
  *
- * @copyright 2020 Roman Parpalak
+ * @copyright 2020-2022 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -20,7 +20,11 @@ use S2\Tex\Cache\CacheProvider;
 use S2\Tex\Processor\DelayedProcessor;
 use S2\Tex\Processor\Request;
 
-$delayedProcessor = new DelayedProcessor(new CacheProvider(CACHE_SUCCESS_DIR, CACHE_FAIL_DIR));
+$delayedProcessor = new DelayedProcessor(
+	new CacheProvider(CACHE_SUCCESS_DIR, CACHE_FAIL_DIR),
+	'http://localhost:' . (defined('HTTP_SVGO_PORT') ? HTTP_SVGO_PORT : '8800') . '/'
+);
+
 $delayedProcessor
 	->addSVGCommand(SVGO)
 	->addSVGCommand(GZIP)

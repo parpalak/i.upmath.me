@@ -1,0 +1,16 @@
+[Unit]
+Description=SVGO HTTP service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Environment=NODE_PORT=8800
+Type=simple
+User=www-data
+ExecStart=/usr/bin/node @@DIR@@/src/http-svgo.js
+Nice=4
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
