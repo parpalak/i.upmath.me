@@ -60,7 +60,7 @@ class Templater implements TemplaterInterface
 		];
 
 		foreach ($test_command as $command => $env) {
-			if (strpos($formula, $command) !== false) {
+			if (strpos($formula, $command . '{') !== false || strpos($formula, $command . ' ') !== false) {
 				$isMathMode = false; // TODO make an option
 				if ($env) {
 					$extraPackages[$env] = new Tpl\Package($env);
@@ -70,14 +70,15 @@ class Templater implements TemplaterInterface
 
 		// Same as above but for inline commands inside math mode
 		$test_command = [
-			'\\color'               => 'xcolor',
-			'\\textcolor'           => 'xcolor',
-			'\\colorbox'            => 'xcolor',
-			'\\pagecolor'           => 'xcolor',
+			'\\color'     => 'xcolor',
+			'\\textcolor' => 'xcolor',
+			'\\colorbox'  => 'xcolor',
+			'\\pagecolor' => 'xcolor',
+			'\\ce'        => 'mhchem',
 		];
 
 		foreach ($test_command as $command => $env) {
-			if (strpos($formula, $command) !== false) {
+			if (strpos($formula, $command . '{') !== false || strpos($formula, $command . ' ') !== false) {
 				$extraPackages[$env] = new Tpl\Package($env);
 			}
 		}
