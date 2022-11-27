@@ -194,7 +194,7 @@ class Renderer implements RendererInterface
 
 	private function validateFormula(string $formula): void
 	{
-		foreach (['\\write', '\\input', '\\usepackage', '\\special'] as $disabledCommand) {
+		foreach (['\\write', '\\input', '\\usepackage', '\\special', '\\include'] as $disabledCommand) {
 			if (strpos($formula, $disabledCommand) !== false) {
 				if ($this->logger !== null) {
 					$this->logger->error(sprintf('Forbidden command "%s": ', $disabledCommand), [$formula]);
@@ -202,6 +202,14 @@ class Renderer implements RendererInterface
 				}
 				throw new \RuntimeException('Forbidden commands.');
 			}
+		}
+
+		if (preg_match('#{\\s*filecontents\\s*\\*?\\s*}#', $formula) === 1) {
+			if ($this->logger !== null) {
+				$this->logger->error(sprintf('Forbidden command "%s": ', 'filecontents'), [$formula]);
+				$this->logger->error('Server vars: ', $_SERVER);
+			}
+			throw new \RuntimeException('Forbidden commands.');
 		}
 	}
 }
