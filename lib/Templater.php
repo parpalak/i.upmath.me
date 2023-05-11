@@ -92,6 +92,10 @@ class Templater implements TemplaterInterface
 			$extraPackages['babel'] = new Tpl\Package('babel', ['russian']);
 		}
 
+		if (preg_match('#[\x{1100}-\x{11FF}\x{3130}-\x{318F}\x{AC00}-\x{D7AF}]+#u', $formula)) {
+			$extraPackages['kotex'] = new Tpl\Package('kotex');
+		}
+
 		// Other setup
 		if (0 === strpos($formula, '\\inline')) {
 			$formula = '\\textstyle ' . substr($formula, 7);
