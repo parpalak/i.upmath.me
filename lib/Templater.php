@@ -92,7 +92,7 @@ class Templater implements TemplaterInterface
 			$extraPackages['babel'] = new Tpl\Package('babel', ['russian']);
 		}
 
-		if (preg_match('#[\x{1100}-\x{11FF}\x{3130}-\x{318F}\x{AC00}-\x{D7AF}]+#u', $formula)) {
+		if (preg_match('#[\x{1100}-\x{11FF}\x{3130}-\x{318F}\x{A960}-\x{A97C}\x{AC00}-\x{D7AF}\x{D7B0}-\x{D7FF}\x{3200}-\x{321E}\x{3260}-\x{327F}]#u', $formula)) {
 			$extraPackages['kotex'] = new Tpl\Package('kotex');
 		}
 
