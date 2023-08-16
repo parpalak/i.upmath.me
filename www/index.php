@@ -11,7 +11,7 @@ if (!defined('FINGERPRINT')) {
 $service_url = '//i.upmath.me/';
 $script_url = $service_url.'latex.js';
 
-$lang = $_SERVER['HTTP_HOST'] === 'tex.s2cms.ru' ? 'ru' : 'en';
+$lang = ($_SERVER['HTTP_HOST'] ?? '') === 'tex.s2cms.ru' ? 'ru' : 'en';
 $i18n = include 'lang.' . $lang . '.php';
 
 $langLinks = [
