@@ -120,7 +120,7 @@ return [
 			</div>
 	',
 	'copyright section'     => <<<TEXT
-				&copy; <a href="https://parpalak.com/">Роман Парпалак</a>, 2014&ndash;2020.
+				&copy; <a href="https://parpalak.com/">Роман Парпалак</a>, 2014&ndash;2023.
 				<script>var mailto="roman%"+"40parpalak.com";document.write('Пишите: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
 				&nbsp; &nbsp;
 				<div class="likely" data-url="http://tex.s2cms.ru/">
