@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 WORKDIR /var/www/i.upmath.me
 
 RUN apt-get update && apt-get -y install \
-    texlive \
+    texlive-full \
     nginx-extras \
     php8.2-fpm \
     php-curl \
