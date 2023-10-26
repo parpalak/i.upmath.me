@@ -1,6 +1,4 @@
 #!/bin/sh
-readonly DATABASE="/database/exambox.db"
-readonly SQL_DATABASE_INIT="/app/database/database.sql"
 
 toupper() {
   echo "$1" | awk '{ print toupper($0) }'
