@@ -48,3 +48,19 @@ sed -i "s~@@DIR@@~$PWD~g" /etc/systemd/system/http-svgo.service
 sudo systemctl start http-svgo
 sudo systemctl enable http-svgo
 ```
+
+## Docker
+You can run the project using docker.
+First of all build the docker image with:
+```bash
+git clone git@github.com:parpalak/i.upmath.me.git
+cd i.upmath.me
+docker build -t i-upmath .
+```
+
+Then you can run it with
+```bash
+docker run -t -p 8080:80 i-upmath
+```
+
+You will find the service active at `localhost:8080`.
