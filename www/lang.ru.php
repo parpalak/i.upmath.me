@@ -126,7 +126,6 @@ return [
 				<div class="likely" data-url="http://tex.s2cms.ru/">
 					<div class="facebook" title="Поделиться ссылкой на Фейсбуке">&nbsp;</div>
 					<div class="vkontakte" title="Поделиться ссылкой во Вконтакте">&nbsp;</div>
-					<div class="twitter" data-via="r_parpalak" title="Поделиться ссылкой в Твитере">&nbsp;</div>
 				</div>
 TEXT
 	,

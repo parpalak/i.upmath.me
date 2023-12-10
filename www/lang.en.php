@@ -128,7 +128,6 @@ return [
 				<div class="likely" data-url="https://i.upmath.me/">
 					<div class="facebook" title="Share">&nbsp;</div>
 					<div class="vkontakte" title="Share">&nbsp;</div>
-					<div class="twitter" data-via="r_parpalak" title="Tweet">&nbsp;</div>
 				</div>
 TEXT
 	,
