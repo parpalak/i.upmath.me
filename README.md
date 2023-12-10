@@ -51,16 +51,11 @@ sudo systemctl enable http-svgo
 
 ## Docker
 You can run the project using docker.
-First of all build the docker image with:
-```bash
-git clone git@github.com:parpalak/i.upmath.me.git
-cd i.upmath.me
-docker build -t i-upmath .
-```
+The docker image is built automatically after a push to the main branch using the github actions.
 
-Then you can run it with
+You can run it with
 ```bash
-docker run -t -p 8080:80 i-upmath
+docker run -t -p 8080:80 ghcr.io/parpalak/upmath.me:master
 ```
 
 You will find the service active at `localhost:8080`.
