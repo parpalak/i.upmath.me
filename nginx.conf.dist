@@ -1,9 +1,9 @@
 upstream php-sock {
-	server unix:/var/run/php5-fpm.sock;
+	server unix:/var/run/php-fpm.sock;
 }
 
 upstream php-tex-sock {
-	server unix:/var/run/php5-fpm-tex.sock;
+	server unix:/var/run/php-fpm-tex.sock;
 }
 
 server {
@@ -81,12 +81,15 @@ server {
 
 	location ~ \.php$ {
 		try_files       $uri =404;
-		include	        /etc/nginx/fastcgi_params;
+		include	        /etc/nginx/fastcgi.conf;
 		fastcgi_pass    php-sock;
 	}
 
 	location @s2_latex_renderer {
-		include	        /etc/nginx/fastcgi_params;
+        add_header 'Access-Control-Allow-Origin' '*' always;
+        add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS' always;
+
+		include	        /etc/nginx/fastcgi.conf;
 		fastcgi_pass    php-tex-sock;
 		fastcgi_param   SCRIPT_FILENAME $document_root/render.php;
 		fastcgi_param   SCRIPT_NAME /render.php;
