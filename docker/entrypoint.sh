@@ -13,7 +13,7 @@ log_header() {
 }
 
 hangout() {
-  log_header 'UPMATH'
+  log_header 'UPMATH LATEX RENDERER'
 }
 
 main() {
