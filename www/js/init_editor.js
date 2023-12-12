@@ -42,9 +42,10 @@ var Renderer = (function () {
 	};
 }());
 
-function initTexEditor(serviceURL) {
+function initTexEditor() {
 	var source = document.querySelector('.editor-text'),
 		preview = document.getElementById('editor-preview'),
+		serviceURL = '//' + (window.location.host === 'tex.s2cms.ru' ? 'i.upmath.me' : window.location.host) + '/',
 		oldOutput;
 
 	/**

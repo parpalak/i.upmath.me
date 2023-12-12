@@ -162,7 +162,7 @@ foreach ($samples_embedding[$lang] as $hint => $sample) {
 				document.addEventListener('DOMContentLoaded', fn);
 			}
 		})(function () {
-			initTexEditor('<?php echo $service_url; ?>');
+			initTexEditor();
 			initTexSite();
 		});
 	</script>
