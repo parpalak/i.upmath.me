@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2020-2022 Roman Parpalak
+ * @copyright 2020-2023 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -92,6 +92,7 @@ class DelayedProcessor
 
 		$context = stream_context_create(['http' => [
 			'method'  => 'POST',
+			'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
 			'content' => $unoptimizedSvg,
 		]]);
 
