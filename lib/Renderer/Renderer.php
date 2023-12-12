@@ -24,6 +24,7 @@ class Renderer implements RendererInterface
 	private ?LoggerInterface $logger;
 	private string $tmpDir;
 	private bool $isDebug = false;
+	private string $texPath;
 	private string $latexCommand;
 	private string $svgCommand;
 	private ?string $pngCommand;
@@ -31,6 +32,7 @@ class Renderer implements RendererInterface
 	public function __construct(
 		TemplaterInterface $templater,
 		string             $tmpDir,
+		string             $texPath,
 		string             $latexCommand,
 		string             $svgCommand,
 		?string            $pngCommand = null
@@ -40,6 +42,7 @@ class Renderer implements RendererInterface
 		$this->latexCommand = $latexCommand;
 		$this->svgCommand   = $svgCommand;
 		$this->pngCommand   = $pngCommand;
+		$this->texPath      = $texPath;
 	}
 
 	public function setIsDebug(bool $isDebug): self
@@ -79,8 +82,13 @@ class Renderer implements RendererInterface
 		// Latex
 		file_put_contents($tmpName, $texSource);
 
-		// See https://github.com/symfony/symfony/issues/5030 for 'exec' hack
-		$process = Process::fromShellCommandline('exec ' . $this->latexCommand . ' ' . $tmpName . ' 2>&1');
+		/**
+		 * Adding the TeX bin directory (e.g. `/home/tex/tl-2020/bin/x86_64-linux`) to the PATH environment variable.
+		 * Otherwise, there can be floating bugs when generating font files.
+		 *
+		 * See https://github.com/symfony/symfony/issues/5030 for 'exec' hack
+		 */
+		$process = Process::fromShellCommandline('PATH="$PATH:' . $this->texPath . '" exec ' . $this->latexCommand . ' ' . $tmpName . ' 2>&1');
 		$process->setTimeout(8);
 
 		try {

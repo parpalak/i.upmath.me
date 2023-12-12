@@ -47,7 +47,7 @@ header('X-Powered-By: Upmath Latex Renderer');
 $templater = new Templater(TPL_DIR);
 
 $pngConverter = new PngConverter(SVG2PNG_COMMAND);
-$renderer     = new Renderer($templater, TMP_DIR, LATEX_COMMAND, DVISVG_COMMAND);
+$renderer     = new Renderer($templater, TMP_DIR, TEX_PATH, LATEX_COMMAND, DVISVG_COMMAND);
 $renderer
 	->setPngConverter($pngConverter)
 	->setIsDebug($isDebug);

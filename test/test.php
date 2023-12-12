@@ -29,7 +29,7 @@ define('SVG2PNG_COMMAND', 'rsvg-convert %1$s -d 96 -p 96 -b white'); // stdout
 echo "\n", 'Using ', TEX_PATH, "\n\n";
 
 $templater = new Templater(TPL_DIR);
-$renderer  = new Renderer($templater, 'tmp/', LATEX_COMMAND, DVISVG_COMMAND);
+$renderer  = new Renderer($templater, 'tmp/', TEX_PATH, LATEX_COMMAND, DVISVG_COMMAND);
 $renderer
 	->setPngConverter(new PngConverter(SVG2PNG_COMMAND))
 	->setLogger(new Logger('log/'))
