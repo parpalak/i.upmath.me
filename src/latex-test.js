@@ -36,10 +36,8 @@
 	var aeImg = {};
 
 	function trackLoading(eImg, path, isCentered) {
-		if (aeImg[path]) {
-			aeImg[path].push(eImg);
-		} else {
-			aeImg[path] = [eImg];
+		if (!aeImg[path]) {
+			aeImg[path] = [[], []];
 
 			fetch(path)
 				.then(function (resp) {
@@ -50,20 +48,23 @@
 
 					if (m && m[1]) {
 						s = m[1].split('|');
-						setSizes(path, s.shift(), s.shift(), s.shift(), isCentered);
+						setSizes(path, s.shift(), s.shift(), s.shift());
 					}
 				});
 		}
+		aeImg[path][isCentered].push(eImg);
 	}
 
-	function setSizes(path, shift, x, y, isCentered) {
-		var ao = aeImg[path], i = ao.length;
+	function setSizes(path, shift, x, y) {
+		for (var isCentered = 0; isCentered < 2; isCentered++) {
+			var ao = aeImg[path][isCentered], i = ao.length;
 
-		for (; i--;) {
-			ao[i].style.opacity = '1';
-			ao[i].style.width = 'calc(var(--latex-pt, 1pt)*' + x + ')';
-			ao[i].style.height = 'calc(var(--latex-pt, 1pt)*' + y + ')';
-			ao[i].style.verticalAlign = (isCentered ? 'top' : 'calc(var(--latex-pt, 1pt)*' + (-shift) + ')');
+			for (; i--;) {
+				ao[i].style.opacity = '1';
+				ao[i].style.width = 'calc(var(--latex-pt, 1pt)*' + x + ')';
+				ao[i].style.height = 'calc(var(--latex-pt, 1pt)*' + y + ')';
+				ao[i].style.verticalAlign = (isCentered ? 'top' : 'calc(var(--latex-pt, 1pt)*' + (-shift) + ')');
+			}
 		}
 	}
 
@@ -129,7 +130,7 @@
 				for (i = 0; i < n; i++) {
 					if (i % 2) {
 						if (i + 1 < n) {
-							eResult = createImgNode(as[i]);
+							eResult = createImgNode(as[i], 0);
 
 							if (/^[,.;!?)\-]/.test(as[i + 1])) {
 								var nobr = d.createElement('span');
