@@ -2,7 +2,7 @@
 /**
  * Makes latex documents containing a formula.
  *
- * @copyright 2015-2022 Roman Parpalak
+ * @copyright 2015-2024 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -75,6 +75,7 @@ class Templater implements TemplaterInterface
 			'\\colorbox'  => 'xcolor',
 			'\\pagecolor' => 'xcolor',
 			'\\ce'        => 'mhchem',
+			'\\vv'        => 'esvect',
 		];
 
 		foreach ($test_command as $command => $env) {
@@ -104,12 +105,10 @@ class Templater implements TemplaterInterface
 		$tpl = $isMathMode ? 'displayformula' : 'common';
 
 		ob_start();
-		/** @noinspection PhpIncludeInspection */
 		include $this->dir . $tpl . '.php';
 		$documentContent = ob_get_clean();
 
 		ob_start();
-		/** @noinspection PhpIncludeInspection */
 		include $this->dir . 'document.php';
 		$text = ob_get_clean();
 
