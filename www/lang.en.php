@@ -2,7 +2,7 @@
 /**
  * English interface
  *
- * @copyright 2015-2020 Roman Parpalak
+ * @copyright 2015-2024 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -65,6 +65,11 @@ return [
 			</div>
 
 			<div class="question">
+				<h3>Is it reliable?</h3>
+				<p>Yes, it is quite reliable. You can view availability data collected by an <a href="https://stats.uptimerobot.com/YVrX5ik0A5">independent external service, UptimeRobot</a>.</p>
+			</div>
+
+			<div class="question">
 				<h3>Is there a guarantee that the service won’t stop working?</h3>
 				<p>No, there is no guarantee. However, I personally use it on my own websites and have no plans to shut it down.</p>
 			</div>
@@ -122,7 +127,7 @@ return [
 			</div>
 	',
 	'copyright section'     => <<<TEXT
-				&copy; 2014&ndash;2023 <a href="https://parpalak.com/">Roman Parpalak</a>.
+				&copy; 2014&ndash;2024 <a href="https://parpalak.com/">Roman Parpalak</a>.
 				<script>var mailto="roman%"+"40parpalak.com";document.write('Drop&nbsp;me&nbsp;a&nbsp;line: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
 				&nbsp; &nbsp;
 				<div class="likely" data-url="https://i.upmath.me/">

@@ -2,7 +2,7 @@
 /**
  * Russian interface
  *
- * @copyright 2015-2020 Roman Parpalak
+ * @copyright 2015-2024 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -58,6 +58,11 @@ return [
 				<h3>Сколько это стоит?</h3>
 				<p>При разумном использовании нисколько. Разумность использования определяется просто:
 				если вы мешаете другим пользователям, ваш поток запросов будет заблокирован.</p>
+			</div>
+
+			<div class="question">
+				<h3>А сервис надежный?</h3>
+				<p>Вполне. Вы можете посмотреть данные о&nbsp;доступности, собранные <a href="https://stats.uptimerobot.com/YVrX5ik0A5">независимым внешним сервисом UptimeRobot</a>.</p>
 			</div>
 
 			<div class="question">
@@ -120,7 +125,7 @@ return [
 			</div>
 	',
 	'copyright section'     => <<<TEXT
-				&copy; <a href="https://parpalak.com/">Роман Парпалак</a>, 2014&ndash;2023.
+				&copy; <a href="https://parpalak.com/">Роман Парпалак</a>, 2014&ndash;2024.
 				<script>var mailto="roman%"+"40parpalak.com";document.write('Пишите: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
 				&nbsp; &nbsp;
 				<div class="likely" data-url="http://tex.s2cms.ru/">
