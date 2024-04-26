@@ -43,7 +43,7 @@ class Templater implements TemplaterInterface
 		];
 
 		foreach ($test_env as $command => $env) {
-			if (strpos($formula, '\\begin{' . $command . '}') !== false || strpos($formula, '\\begin{' . $command . '*}') !== false) {
+			if (str_contains($formula, '\\begin{' . $command . '}') || str_contains($formula, '\\begin{' . $command . '*}')) {
 				$isMathMode = false;
 				if ($env) {
 					$extraPackages[$env] = new Tpl\Package($env);
@@ -60,7 +60,7 @@ class Templater implements TemplaterInterface
 		];
 
 		foreach ($test_command as $command => $env) {
-			if (strpos($formula, $command . '{') !== false || strpos($formula, $command . '[') !== false || strpos($formula, $command . ' ') !== false) {
+			if (str_contains($formula, $command . '{') || str_contains($formula, $command . '[') || str_contains($formula, $command . ' ')) {
 				$isMathMode = false; // TODO make an option
 				if ($env) {
 					$extraPackages[$env] = new Tpl\Package($env);
@@ -79,13 +79,13 @@ class Templater implements TemplaterInterface
 		];
 
 		foreach ($test_command as $command => $env) {
-			if (strpos($formula, $command . '{') !== false || strpos($formula, $command . ' ') !== false) {
+			if (str_contains($formula, $command . '{') || str_contains($formula, $command . ' ')) {
 				$extraPackages[$env] = new Tpl\Package($env);
 			}
 		}
 
 		// Custom rules
-		if (strpos($formula, '\\xymatrix') !== false || strpos($formula, '\\begin{xy}') !== false) {
+		if (str_contains($formula, '\\xymatrix') || str_contains($formula, '\\begin{xy}')) {
 			$extraPackages['xy'] = new Tpl\Package('xy', ['all']);
 		}
 
@@ -98,7 +98,7 @@ class Templater implements TemplaterInterface
 		}
 
 		// Other setup
-		if (0 === strpos($formula, '\\inline')) {
+		if (str_starts_with($formula, '\\inline')) {
 			$formula = '\\textstyle ' . substr($formula, 7);
 		}
 
