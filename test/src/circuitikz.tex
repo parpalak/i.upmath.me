@@ -1,0 +1,9 @@
+\begin{circuitikz}
+\draw
+(0,0) node[above] {$A$} to[short, o-*] ++(0.7,0)
+coordinate (A) to[generic, *-*] ++(2,0)
+coordinate (B) to[generic, *-*] ++(2,0)
+coordinate (E) to[generic, *-*] ++(2,0)
+coordinate (D) to[short, *-o] ++(0.7,0) node[above] {$B$};
+\draw (A)-- ++(0,-0.7)-| (E) (B)-- ++(0,0.7)-| (D);
+\end{circuitikz}

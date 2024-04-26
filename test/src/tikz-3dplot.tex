@@ -1,0 +1,33 @@
+\tdplotsetmaincoords{70}{10}
+%
+\pgfmathsetmacro{\r}{0.8}
+\pgfmathsetmacro{\ra}{.45}
+\pgfmathsetmacro{\rb}{.5}
+\pgfmathsetmacro{\thetavec}{70}
+\pgfmathsetmacro{\phivec}{20}
+\pgfmathsetmacro{\a}{20}
+\pgfmathsetmacro{\cms}{3}
+%
+\begin{tikzpicture}[scale=5,tdplot_main_coords]
+\coordinate (O) at (0,0,0);
+\draw[->] (-1,0,0) -- (1,0,0) node[anchor=north east]{$x$};
+\draw[->] (0,-1.2,0) -- (0,1.2,0) node[anchor=west]{$y$};
+\draw[->] (0,0,-0.6) -- (0,0,0.6) node[anchor=west]{$z$};
+\tdplotsetcoord{P}{\ra}{90-\a}{\phivec}
+\tdplotsetcoord{G}{\ra}{90-\a}{\phivec+10}
+\tdplotsetcoord{R}{\rb}{90-\a}{\phivec}
+\tdplotsetcoord{T}{\rb}{90-\a}{\phivec+10}
+\draw[dashed] (P) -- (Pxy) (G) -- (Gxy) (T) -- (Txy) (R) -- (Rxy) node[pos=0.4,right] {$h$};
+\draw[fill=red,fill opacity=0.6] (P) -- (G) -- (T) -- (R) -- (P);
+\draw[fill=orange,fill opacity=0.7] (Pxy) -- (Gxy) -- (Txy) -- (Rxy) -- cycle;
+\draw[dashed] (Gy) -- (Gxy) node[pos=0.5,anchor=north,inner sep=2pt] {$x$};
+\draw[] (Gy) -- (G);
+%
+\tdplotsetrotatedcoords{90}{-90}{-90}
+\tdplotdrawarc[tdplot_rotated_coords]{(Gy)}{0.2}{0}{22}{right}{$\alpha$}
+\tdplotsetrotatedcoords{0}{-\a}{0}
+\draw[red,dashed,tdplot_rotated_coords,fill=red,fill opacity=0.1] (0,\r,0) arc (90-\cms:450-\cms:\r);
+\draw[red,thick,tdplot_rotated_coords] (0,\r,0) arc (90-\cms:-200:\r);
+\draw[orange,dashed,fill=orange,fill opacity=0.1] (0,\r,0) arc (90+\cms:450+\cms:\r);
+\draw[orange,thick] (0,\r,0) arc (90+\cms:408:\r);
+\end{tikzpicture}

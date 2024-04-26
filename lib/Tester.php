@@ -2,11 +2,13 @@
 /**
  * Test infrastructure.
  *
- * @copyright 2015-2022 Roman Parpalak
+ * @copyright 2015-2024 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
  */
+
+declare(strict_types=1);
 
 namespace S2\Tex;
 
@@ -14,8 +16,8 @@ use S2\Tex\Renderer\RendererInterface;
 
 class Tester
 {
-	private string $srcTemplate = 'src/*.tex';
-	private string $outDir      = '../www/test_out/';
+	private string $srcTemplate;
+	private string $outDir;
 	private RendererInterface $renderer;
 
 	public function __construct(RendererInterface $renderer, string $srcTpl, string $outDir)
@@ -25,22 +27,40 @@ class Tester
 		$this->outDir      = $outDir;
 	}
 
-	public function run(): void
+	public function run(array $extensions = ['svg', 'png']): void
 	{
 		$this->clearOutDir();
 
 		foreach (glob($this->srcTemplate) as $testFilename) {
 			$source = file_get_contents($testFilename);
-			$start  = microtime(1);
+			$start  = microtime(true);
 
-			$svg = $this->renderer->run($source, 'svg');
-			$this->saveResultFile($testFilename, 'svg', $svg);
+			foreach ($extensions as $ext) {
+				$this->saveResultFile($testFilename, $ext, $this->renderer->run($source, $ext));
+			}
 
-			$png = $this->renderer->run($source, 'png');
-			$this->saveResultFile($testFilename, 'png', $png);
-
-			printf("| %-30s| %-8s|\n", $testFilename, round(microtime(1) - $start, 4));
+			printf("| %-30s| %-8s|\n", $testFilename, round(microtime(true) - $start, 4));
 		}
+	}
+
+	public function compareResults(string $expectedDir): bool
+	{
+		$ok = true;
+		foreach (glob($this->srcTemplate) as $testFilename) {
+			$fileName = basename($testFilename, '.tex');
+			$result   = file_get_contents($this->outDir . $fileName . '.svg');
+			$expected = file_get_contents($expectedDir . $fileName . '.svg');
+			if ($result !== $expected) {
+				echo 'Failed: ', $fileName, "\n";
+				echo "\tResult: ", $result, "\n";
+				echo "\tExpected: ", $expected, "\n";
+				$ok = false;
+			} else {
+				echo 'Passed: ', $fileName, "\n";
+			}
+		}
+
+		return $ok;
 	}
 
 	private function saveResultFile(string $testFilename, string $extension, string $content): void
