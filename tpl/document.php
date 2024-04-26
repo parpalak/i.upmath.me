@@ -12,6 +12,8 @@
 \usepackage{amssymb}
 \usepackage{stmaryrd}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\lt}{<}
+\newcommand{\gt}{>}
 
 \usepackage[verbose]{newunicodechar}
 
