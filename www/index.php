@@ -21,10 +21,10 @@ $langLinks = [
 
 function __ ($key) {
 	global $i18n;
-	return isset($i18n[$key]) ? $i18n[$key] : '<span style="color:red;">Missing translation: ' . $key . '</span>';
+	return $i18n[$key] ?? '<span style="color:red;">Missing translation: ' . $key . '</span>';
 }
 
-if (substr($_SERVER['REQUEST_URI'], 0, 3) === '/g/') {
+if (str_starts_with($_SERVER['REQUEST_URI'], '/g/')) {
 	$editor_content = urldecode(substr($_SERVER['REQUEST_URI'], 3));
 } else {
 	$editor_content = 'f(x)';
@@ -32,7 +32,7 @@ if (substr($_SERVER['REQUEST_URI'], 0, 3) === '/g/') {
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo $lang; ?>">
 <meta charset="utf-8">
 <title><?php echo __('title'); ?></title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,7 +40,6 @@ if (substr($_SERVER['REQUEST_URI'], 0, 3) === '/g/') {
 <meta name="description" content="<?php echo __('meta-description'); ?>" />
 <link rel="stylesheet" href="/css/style.min.css?<?php echo FINGERPRINT; ?>">
 <link rel="icon" type="image/png" href="/favicon.png" />
-<script src="/latex.js"></script>
 <body>
 	<div class="section" id="moto">
 		<div class="section-content">
@@ -49,7 +48,7 @@ if (substr($_SERVER['REQUEST_URI'], 0, 3) === '/g/') {
 <?php
 
 foreach ($langLinks as $linkLang => $linkUrl) {
-	if ($linkLang != $lang) {
+	if ($linkLang !== $lang) {
 ?>
 				<a class="lang-link" href="<?php echo $linkUrl; ?>"><?php echo $linkLang; ?></a>
 <?php
@@ -83,7 +82,7 @@ foreach ($langLinks as $linkLang => $linkUrl) {
 					<label><input type="radio" name="format" id="svg_radio" value="svg" checked />SVG</label>
 					<label><input type="radio" name="format" value="png" />PNG</label>
 				</p>
-				<p class="preview-block"><img id="editor-preview" class="editor-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></p>
+				<p class="preview-block"><img id="editor-preview" class="editor-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Editor preview"></p>
 				<table class="url-line">
 					<tr>
 						<td class="url-cell"><?php echo __('image URL'); ?></td>
@@ -104,7 +103,9 @@ foreach ($samples as $hint => $sample) {
 ?>
 			<div class="sample-box">
 				<h3 class="sample-title"><?php echo $i18n['samples'][$hint]; ?></h3>
-				<div class="sample-rendered" style="height: <?php echo htmlspecialchars($sample['height']); ?>">$$<?php echo $sample['text']; ?>$$</div>
+				<div class="sample-rendered" style="height: <?php echo htmlspecialchars($sample['height']); ?>">
+					<img src="<?php echo $service_url . 'svg/' . rawurlencode($sample['text']); ?>" alt="" loading="lazy">
+				</div>
 				<div class="sample-source"><?php echo htmlspecialchars($sample['text']); ?></div>
 				<p><button class="add-formula"><?php echo __('add to editor'); ?></button></p>
 			</div>
@@ -153,6 +154,7 @@ foreach ($samples_embedding[$lang] as $hint => $sample) {
 		</div>
 	</div>
 
+	<script src="/latex.js"></script>
 	<script src="/js/scripts.min.js?<?php echo FINGERPRINT; ?>"></script>
 	<script>
 		(function ready(fn) {
