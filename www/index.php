@@ -163,7 +163,6 @@ foreach ($samples_embedding[$lang] as $hint => $sample) {
 			}
 		})(function () {
 			initTexEditor();
-			initTexSite();
 		});
 	</script>
 </body>

@@ -30,12 +30,11 @@ COPY . .
 RUN mkdir -p logs
 RUN composer install --no-dev
 
-RUN npm install -g bower yarn grunt-cli && \
+RUN npm install -g yarn grunt-cli && \
     yarn install && \
-    bower install && \
     grunt && \
     yarn install --prod && \
-    npm uninstall -g bower yarn grunt-cli
+    npm uninstall -g yarn grunt-cli
 
 RUN mkdir -p /var/run/php-fpm/
 

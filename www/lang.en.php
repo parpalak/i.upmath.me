@@ -129,11 +129,6 @@ return [
 	'copyright section'     => <<<TEXT
 				&copy; 2014&ndash;2024 <a href="https://parpalak.com/">Roman Parpalak</a>.
 				<script>var mailto="roman%"+"40parpalak.com";document.write('Drop&nbsp;me&nbsp;a&nbsp;line: <a href="mailto:'+unescape(mailto)+'">' + unescape(mailto) + '</a>.');</script>
-				&nbsp; &nbsp;
-				<div class="likely" data-url="https://i.upmath.me/">
-					<div class="facebook" title="Share">&nbsp;</div>
-					<div class="vkontakte" title="Share">&nbsp;</div>
-				</div>
 TEXT
 	,
 ];

@@ -4,9 +4,7 @@ module.exports = function(grunt) {
 		concat: {
 			main: {
 				src: [
-					'bower_components/autosize/dist/autosize.min.js',
-					'bower_components/Stickyfill/dist/stickyfill.min.js',
-					'bower_components/ilyabirman-likely/release/likely.js',
+					'node_modules/autosize/dist/autosize.min.js',
 					'www/js/init_editor.js'
 				],
 				dest: 'www/js/scripts.js'
@@ -23,7 +21,6 @@ module.exports = function(grunt) {
 			target: {
 				src: [
 					'www/css/style.css',
-					'bower_components/ilyabirman-likely/release/likely.css'
 				],
 				dest: 'www/css/style.min.css'
 			}

@@ -1,4 +1,7 @@
 /* colors */
+html {
+	scroll-behavior: smooth;
+	}
 body {
 	background: #FFFBDA;
 	color: #000;
@@ -144,6 +147,7 @@ h2+h3 {margin-top: 0;}
 .section {
 	padding: 1px 1em;
 	padding: 1px calc(0.5em + 0.5%);
+	scroll-margin-top: 37px;
 	}
 .header-content {
 	padding: 0 1em;
@@ -197,6 +201,9 @@ h2+h3 {margin-top: 0;}
 				a.lang-link:hover {
 					opacity: 1;
 					}
+	#copyright {
+		padding-bottom: 0.5em;
+		}
 .editor-text, .editor-result {
 	width: 100%;
 	-webkit-box-sizing: border-box;
@@ -266,10 +273,6 @@ p, pre, .url-line {
 	display: table;
 	}
 
-.likely {
-	vertical-align: middle;
-	}
-
 .text-content {
 	max-width: initial;
 }
@@ -328,14 +331,12 @@ p, pre, .url-line {
 	}
 
 	.preview-block {
-		overflow-x: scroll;
-		-webkit-overflow-scrolling: touch;
+		overflow-x: auto;
 	}
 
 	/* scrollable menu */
 	.nav {
-		overflow-x: scroll;
-		-webkit-overflow-scrolling: touch;
+		overflow-x: auto;
 		white-space: nowrap;
 		padding-bottom: 20px;
 	}

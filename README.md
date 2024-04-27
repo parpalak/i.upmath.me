@@ -21,8 +21,8 @@ You will find the service active at `localhost:8080`.
 1. [TeX Live](https://www.tug.org/texlive/quickinstall.html). I prefer a full installation and disabling write18 support.
 2. `nginx` web server with [ngx_http_lua_module](https://github.com/openresty/lua-nginx-module) (for example, [nginx-extras Debian package](https://packages.debian.org/search?searchon=names&keywords=nginx-extras)).
 3. `php-fpm`. `proc_open()` function must be enabled.
-   * Make the `/home/tex/tl-2020/texmf-var` dir writable for the `php-fpm` process user.
-4. Node.js and frontend tools: `npm`, `bower`, `grunt-cli`.
+   * Make the `/home/tex/tl-202*/texmf-var` dir writable for the `php-fpm` process user.
+4. Node.js and frontend tools: `npm`, `grunt-cli`.
 5. `ghostscript` (used internally by `dvisvgm` TeX component).
 6. Utilities: `rsvg-convert`, `optipng`, `pngout`. Install them or modify the code to disable PNG support.
 
@@ -35,7 +35,6 @@ git clone git@github.com:parpalak/i.upmath.me.git
 cd i.upmath.me
 yarn install
 composer install
-bower install
 grunt
 ```
 
