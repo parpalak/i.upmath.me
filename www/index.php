@@ -85,8 +85,8 @@ foreach ($langLinks as $linkLang => $linkUrl) {
 				<p class="preview-block"><img id="editor-preview" class="editor-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Editor preview"></p>
 				<table class="url-line">
 					<tr>
-						<td class="url-cell"><?php echo __('image URL'); ?></td>
-						<td class="url-cell" width="100%"><input type="text" class="editor-result" name="result" value="" /></td>
+						<td class="url-cell"><label for="editor_result"><?php echo __('image URL'); ?></label></td>
+						<td class="url-cell" width="100%"><input type="text" class="editor-result" id="editor_result" name="result" value="" /></td>
 					</tr>
 				</table>
 			</form>
