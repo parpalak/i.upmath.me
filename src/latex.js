@@ -1,6 +1,6 @@
 /**
  * Replaces LaTeX formulas by pictures
- * @copyright 2012-2020 Roman Parpalak
+ * @copyright 2012-2024 Roman Parpalak
  */
 
 (function (w, d) {
@@ -60,11 +60,11 @@
 		processTree(d.body);
 	});
 
-	var aeImg = {};
+	var imgQueue = {}, aSizes = {};
 
 	function trackLoading(eImg, path, isCentered) {
-		if (!aeImg[path]) {
-			aeImg[path] = [[], []];
+		if (!imgQueue[path]) {
+			imgQueue[path] = [[], []];
 
 			fetch(path)
 				.then(function (resp) {
@@ -79,18 +79,27 @@
 					}
 				});
 		}
-		aeImg[path][isCentered].push(eImg);
+		if (!aSizes[path]) {
+			imgQueue[path][isCentered].push(eImg);
+		} else {
+			setImgSize(eImg, isCentered, aSizes[path][0], aSizes[path][1], aSizes[path][2]);
+		}
+	}
+
+	function setImgSize(eImg, isCentered, shift, x, y) {
+		eImg.style.opacity = '1';
+		eImg.style.width = 'calc(var(--latex-zoom, 1)*' + x + 'pt)';
+		eImg.style.height = 'calc(var(--latex-zoom, 1)*' + y + 'pt)';
+		eImg.style.verticalAlign = (isCentered ? 'top' : 'calc(var(--latex-zoom, 1)*' + (-shift) + 'pt)');
 	}
 
 	function setSizes(path, shift, x, y) {
+		aSizes[path] = [shift, x, y];
 		for (var isCentered = 0; isCentered < 2; isCentered++) {
-			var ao = aeImg[path][isCentered], i = ao.length;
+			var ao = imgQueue[path][isCentered], i = ao.length;
 
 			for (; i--;) {
-				ao[i].style.opacity = '1';
-				ao[i].style.width = 'calc(var(--latex-zoom, 1)*' + x + 'pt)';
-				ao[i].style.height = 'calc(var(--latex-zoom, 1)*' + y + 'pt)';
-				ao[i].style.verticalAlign = (isCentered ? 'top' : 'calc(var(--latex-zoom, 1)*' + (-shift) + 'pt)');
+				setImgSize(ao[i], isCentered, shift, x, y);
 			}
 		}
 	}
