@@ -57,6 +57,7 @@ class Templater implements TemplaterInterface
 			'\\smartdiagram'        => 'smartdiagram',
 			'\\DisplayProof'        => 'bussproofs',
 			'\\tdplotsetmaincoords' => 'tikz-3dplot',
+			'\\tikz'                => 'tikz',
 		];
 
 		foreach ($test_command as $command => $env) {

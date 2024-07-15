@@ -4,7 +4,7 @@
 /** @var \S2\Tex\Tpl\PackageInterface[] $extraPackages */
 
 ?>
-\documentclass[11pt]{article}
+\documentclass[11pt,dvisvgm]{article}
 \usepackage[paperwidth=180in,paperheight=180in]{geometry}
 \batchmode
 \usepackage[utf8]{inputenc}
