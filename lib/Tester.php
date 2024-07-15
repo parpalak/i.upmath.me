@@ -14,17 +14,14 @@ namespace S2\Tex;
 
 use S2\Tex\Renderer\RendererInterface;
 
-class Tester
+readonly class Tester
 {
-	private string $srcTemplate;
-	private string $outDir;
-	private RendererInterface $renderer;
-
-	public function __construct(RendererInterface $renderer, string $srcTpl, string $outDir)
-	{
-		$this->renderer    = $renderer;
-		$this->srcTemplate = $srcTpl;
-		$this->outDir      = $outDir;
+	public function __construct(
+		private RendererInterface $renderer,
+		private string            $srcTemplate,
+		private string            $outDir,
+		private string            $svg2pngCommand,
+	) {
 	}
 
 	public function run(array $extensions = ['svg', 'png']): void
@@ -47,13 +44,14 @@ class Tester
 	{
 		$ok = true;
 		foreach (glob($this->srcTemplate) as $testFilename) {
-			$fileName = basename($testFilename, '.tex');
-			$result   = file_get_contents($this->outDir . $fileName . '.svg');
-			$expected = file_get_contents($expectedDir . $fileName . '.svg');
-			if ($result !== $expected) {
+			$fileName        = basename($testFilename, '.tex');
+			$resultContent   = $this->convertSvgToPng($this->outDir . $fileName . '.svg');
+			$expectedContent = $this->convertSvgToPng($expectedDir . $fileName . '.svg');
+			if ($resultContent !== $expectedContent && ($diff = $this->diffPngImages($expectedContent, $resultContent)) > 0) {
 				echo 'Failed: ', $fileName, "\n";
-				echo "\tResult: ", $result, "\n";
-				echo "\tExpected: ", $expected, "\n";
+				echo "\tDiff: ", $diff, "\n";
+				echo "\tResult: ", file_get_contents($this->outDir . $fileName . '.svg'), "\n";
+				echo "\tExpected: ", file_get_contents($expectedDir . $fileName . '.svg'), "\n";
 				$ok = false;
 			} else {
 				echo 'Passed: ', $fileName, "\n";
@@ -66,6 +64,42 @@ class Tester
 	private function saveResultFile(string $testFilename, string $extension, string $content): void
 	{
 		file_put_contents($this->outDir . basename($testFilename, '.tex') . '.' . $extension, $content);
+	}
+
+	private function convertSvgToPng(string $svgFileName): string
+	{
+		$command = sprintf($this->svg2pngCommand, $svgFileName);
+		ob_start();
+		passthru($command);
+
+		return ob_get_clean();
+	}
+
+	private function diffPngImages(string $content1, string $content2): float
+	{
+		$image1 = imagecreatefromstring($content1);
+		$image2 = imagecreatefromstring($content2);
+
+		$width1  = imagesx($image1);
+		$height1 = imagesy($image1);
+		$width2  = imagesx($image2);
+		$height2 = imagesy($image2);
+
+		if ($width1 !== $width2 || $height1 !== $height2) {
+			return 999;
+		}
+
+		// Сравниваем пиксели
+		$differentPixels = 0;
+		for ($x = 0; $x < $width1; $x++) {
+			for ($y = 0; $y < $height1; $y++) {
+				if (imagecolorat($image1, $x, $y) !== imagecolorat($image2, $x, $y)) {
+					$differentPixels++;
+				}
+			}
+		}
+
+		return $differentPixels / ($width1 * $height1);
 	}
 
 	private function clearOutDir(): void
