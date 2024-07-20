@@ -98,9 +98,26 @@ class Templater implements TemplaterInterface
 			$extraPackages['kotex'] = new Tpl\Package('kotex');
 		}
 
-		// Other setup
-		if (str_starts_with($formula, '\\inline')) {
-			$formula = '\\textstyle ' . substr($formula, 7);
+		// Parse custom Upmath setup prefixes
+		$isInline = $hasDvisvgmOption = false;
+		while (true) {
+			if (str_starts_with($formula, '\\inline')) {
+				$formula  = substr($formula, 7);
+				$isInline = true;
+				continue;
+			}
+
+			if (str_starts_with($formula, '\\dvisvgm')) {
+				$formula          = substr($formula, 8);
+				$hasDvisvgmOption = true;
+				continue;
+			}
+
+			break;
+		}
+
+		if ($isInline) {
+			$formula = '\\textstyle ' . $formula;
 		}
 
 		$tpl = $isMathMode ? 'displayformula' : 'common';

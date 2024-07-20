@@ -1,10 +1,19 @@
 <?php
 
+/** @var bool $hasDvisvgmOption */
 /** @var string $documentContent */
 /** @var \S2\Tex\Tpl\PackageInterface[] $extraPackages */
 
+/**
+ * \documentclass[11pt,dvisvgm]{standalone}
+ * %\usepackage[paperwidth=180in,paperheight=180in]{geometry}
+ * \usepackage[paperwidth=180in, paperheight=180in,margin=0in]{geometry}
+ * %\usepackage[a4paper, total={6in, 8in}]{geometry}
+ * \standaloneconfig{crop=false}
+ */
+
 ?>
-\documentclass[11pt,dvisvgm]{article}
+\documentclass[11pt<?php if ($hasDvisvgmOption) { ?>,dvisvgm<?php } ?>]{article}
 \usepackage[paperwidth=180in,paperheight=180in]{geometry}
 \batchmode
 \usepackage[utf8]{inputenc}

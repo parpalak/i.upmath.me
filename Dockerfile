@@ -10,6 +10,7 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
     php8.2-fpm \
     php8.2-curl \
     php8.2-xml \
+    php8.2-gd \
     composer \
     librsvg2-bin \
     optipng \

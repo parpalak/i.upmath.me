@@ -50,8 +50,8 @@ readonly class Tester
 			if ($resultContent !== $expectedContent && ($diff = $this->diffPngImages($expectedContent, $resultContent)) > 0) {
 				echo 'Failed: ', $fileName, "\n";
 				echo "\tDiff: ", $diff, "\n";
-				echo "\tResult: ", file_get_contents($this->outDir . $fileName . '.svg'), "\n";
-				echo "\tExpected: ", file_get_contents($expectedDir . $fileName . '.svg'), "\n";
+//				echo "\tResult: ", file_get_contents($this->outDir . $fileName . '.svg'), "\n";
+//				echo "\tExpected: ", file_get_contents($expectedDir . $fileName . '.svg'), "\n";
 				$ok = false;
 			} else {
 				echo 'Passed: ', $fileName, "\n";
