@@ -115,6 +115,8 @@ class DelayedProcessor
 
 		Helper::filePut($filePath . '.gz', $gzEncodedSvg);
 
+		@unlink($filePath);
+
 		return true;
 	}
 }

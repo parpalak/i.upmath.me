@@ -19,14 +19,15 @@ server {
 	error_log /var/www/i.upmath.me/logs/error.log error;
 
 	location ~ ^(?s)/(?<ext>svg|png)/(?<formula>.*)$ {
-		gzip_static   on;
+        gunzip        on;
+        gzip_static   always;
 		gzip_vary     on;
 		gzip_proxied  expired no-cache no-store private auth;
 
 		add_header 'Access-Control-Allow-Origin' '*' always;
 		add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS' always;
 
-		#expires 1d;
+		#expires 1d; # enabled on prod
 
 		set_by_lua $file_path '
 			local formula = ngx.var.formula;
@@ -40,7 +41,9 @@ server {
 			return 400;
 		}
 
-		try_files /_cache/$file_path @s2_latex_renderer;
+        rewrite ^ /_cache/$file_path break;
+        error_page 404 = @s2_latex_renderer;
+        log_not_found off;
 	}
 
 	location /latex.js {
