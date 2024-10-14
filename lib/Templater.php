@@ -77,6 +77,7 @@ class Templater implements TemplaterInterface
 			'\\pagecolor' => 'xcolor',
 			'\\ce'        => 'mhchem',
 			'\\vv'        => 'esvect',
+			'\\mathscr'   => 'mathrsfs',
 		];
 
 		foreach ($test_command as $command => $env) {
