@@ -20,8 +20,10 @@ require '../config.php';
 $isDebug = defined('DEBUG') && DEBUG;
 error_reporting(E_ALL);
 
+$tmpDir = 'tmp/';
+
 // Setting up external commands
-define('LATEX_COMMAND', TEX_PATH . 'latex -output-directory=' . TMP_DIR);
+define('LATEX_COMMAND', TEX_PATH . 'latex -output-directory=' . $tmpDir);
 define('DVISVG_COMMAND', TEX_PATH . 'dvisvgm %1$s -o %1$s.svg -n --exact -v0 --zoom=' . OUTER_SCALE);
 // define('DVIPNG_COMMAND', TEX_PATH.'dvipng -T tight %1$s -o %1$s.png -D '.(96 * OUTER_SCALE)); // outdated
 define('SVG2PNG_COMMAND', 'rsvg-convert %1$s -d 96 -p 96 -b white'); // stdout
@@ -29,7 +31,7 @@ define('SVG2PNG_COMMAND', 'rsvg-convert %1$s -d 96 -p 96 -b white'); // stdout
 echo "\n", 'Using ', TEX_PATH, "\n\n";
 
 $templater = new Templater(TPL_DIR);
-$renderer  = new Renderer($templater, 'tmp/', TEX_PATH, LATEX_COMMAND, DVISVG_COMMAND);
+$renderer  = new Renderer($templater, $tmpDir, TEX_PATH, LATEX_COMMAND, DVISVG_COMMAND);
 $renderer
 	->setPngConverter(new PngConverter(SVG2PNG_COMMAND))
 	->setLogger(new Logger('log/'))

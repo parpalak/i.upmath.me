@@ -21,15 +21,17 @@ require __DIR__ . '/../config.php';
 $isDebug = false;
 error_reporting(E_ALL);
 
+$tmpDir = 'tmp/';
+
 // Setting up external commands
-define('LATEX_COMMAND', TEX_PATH . 'latex -output-directory=' . TMP_DIR);
+define('LATEX_COMMAND', TEX_PATH . 'latex -output-directory=' . $tmpDir);
 define('DVISVG_COMMAND', TEX_PATH . 'dvisvgm %1$s -o %1$s.svg -n --exact -v0 --zoom=' . OUTER_SCALE);
 define('SVG2PNG_COMMAND', 'rsvg-convert %1$s -z 4 -b white'); // stdout, 4x zoom
 
 echo "\n", 'Using ', TEX_PATH, "\n\n";
 
 $templater = new Templater(TPL_DIR);
-$renderer  = new Renderer($templater, 'tmp/', TEX_PATH, LATEX_COMMAND, DVISVG_COMMAND);
+$renderer  = new Renderer($templater, $tmpDir, TEX_PATH, LATEX_COMMAND, DVISVG_COMMAND);
 $renderer
 	->setLogger(new Logger('log/'))
 	->setIsDebug($isDebug)
