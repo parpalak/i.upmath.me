@@ -87,5 +87,10 @@ if (!empty($extraPackages)) {
 \setlength{\belowdisplayskip}{0pt}
 
 \begin{document}
+<?php
+foreach (['newwrite', 'openout'] as $disabledCommand) {
+	echo '\\renewcommand{\\' . $disabledCommand . '}{\\errmessage{Command \\noexpand\\' . $disabledCommand . ' is disabled}}', "\n";
+}
+?>
 <?php echo $documentContent; ?>
 \end{document}
