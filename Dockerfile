@@ -37,9 +37,9 @@ RUN npm install -g yarn grunt-cli && \
     yarn install --prod && \
     npm uninstall -g yarn grunt-cli
 
-RUN mkdir logs && mkdir tex_logs && chown www-data:www-data tex_logs
+RUN mkdir logs && mkdir tex_logs && chown www-data:www-data tex_logs tmp www/_cache www/_error
 
-RUN mkdir -p /var/run/php-fpm/ && \
+RUN mkdir -p /run/php-fpm/ && \
     cp config.php.dist config.php  && \
     tlversion=$(cat /usr/local/texlive/20*/release-texlive.txt | head -n 1 | awk '{ print $5 }') && \
     sed -i "s/\${tlversion}/${tlversion}/g" config.php && \
