@@ -29,7 +29,6 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
 
 COPY . .
 
-RUN mkdir -p logs
 RUN composer install --no-dev
 
 RUN npm install -g yarn grunt-cli && \
@@ -38,15 +37,14 @@ RUN npm install -g yarn grunt-cli && \
     yarn install --prod && \
     npm uninstall -g yarn grunt-cli
 
-RUN mkdir -p /var/run/php-fpm/
+RUN mkdir logs && mkdir tex_logs && chown www-data:www-data tex_logs
 
-RUN cp config.php.dist config.php  \
-    && tlversion=$(cat /usr/local/texlive/20*/release-texlive.txt | head -n 1 | awk '{ print $5 }') \
-    && sed -i "s/\${tlversion}/${tlversion}/g" config.php
-RUN cp docker/nginx.conf /etc/nginx/nginx.conf
-RUN cp docker/www.conf /etc/php/8.2/fpm/pool.d/www.conf && \
-    cp docker/www-tex.conf /etc/php/8.2/fpm/pool.d/www-tex.conf
-
-RUN cp docker/superv.conf /etc/superv.conf
+RUN mkdir -p /var/run/php-fpm/ && \
+    cp config.php.dist config.php  && \
+    tlversion=$(cat /usr/local/texlive/20*/release-texlive.txt | head -n 1 | awk '{ print $5 }') && \
+    sed -i "s/\${tlversion}/${tlversion}/g" config.php && \
+    cp docker/nginx.conf /etc/nginx/nginx.conf && \
+    cp docker/*.pool.conf /etc/php/8.2/fpm/pool.d/ && \
+    cp docker/superv.conf /etc/superv.conf
 
 ENTRYPOINT [ "/var/www/i.upmath.me/docker/entrypoint.sh" ]
