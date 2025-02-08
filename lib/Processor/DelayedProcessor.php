@@ -49,15 +49,18 @@ class DelayedProcessor
 				return;
 			}
 
-			// Fallback way via executing shell commands in case if HTTP service is down.
-			foreach ($this->svgCommands as $pattern) {
-				$command = sprintf($pattern, $filePath);
-				Helper::newRelicProfileDataStore(
-					static fn() => shell_exec($command),
-					'shell',
-					Helper::getShortCommandName($command)
-				);
+			if (file_exists($filePath)) {
+				// Fallback way via executing shell commands in case if HTTP service is down.
+				foreach ($this->svgCommands as $pattern) {
+					$command = sprintf($pattern, $filePath);
+					Helper::newRelicProfileDataStore(
+						static fn() => shell_exec($command),
+						'shell',
+						Helper::getShortCommandName($command)
+					);
+				}
 			}
+
 
 			return;
 		}

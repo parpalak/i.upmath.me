@@ -36,7 +36,7 @@ class Helper
 	 *
 	 * @param string $filename
 	 * @param string $content
-	 * @param bool   $overwriteExisting Optimisation flag to unlink existing file first.
+	 * @param bool   $overwriteExisting Optimization flag to unlink existing file first.
 	 */
 	public static function filePut(string $filename, string $content, bool $overwriteExisting = false): void
 	{
@@ -45,9 +45,11 @@ class Helper
 			throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
 		}
 
-		$tmpFilename = $filename . '.temp';
+		$tmpFilename = $filename . '.' . uniqid('', true) . '.temp';
 
-		file_put_contents($tmpFilename, $content);
+		if (file_put_contents($tmpFilename, $content, LOCK_EX) === false) {
+			throw new \RuntimeException(sprintf('Unable to write to file "%s"', $tmpFilename));
+		}
 
 		if ($overwriteExisting || !@rename($tmpFilename, $filename)) {
 			@unlink($filename);
