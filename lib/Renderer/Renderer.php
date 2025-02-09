@@ -120,7 +120,7 @@ class Renderer implements RendererInterface
 		}
 
 		if (!file_exists($tmpName . '.dvi')) {
-			// Ohe has to figure out why the process was killed and why no dvi-file is created.
+			// Ohe has to figure out why the process was killed and why no dvi-file has been created.
 			if ($this->logger !== null) {
 				$this->logger->error('Latex finished incorrectly', [
 					'command'                   => $process->getCommandLine(),
@@ -132,7 +132,6 @@ class Renderer implements RendererInterface
 				$this->logger->error('trace (' . $tmpName . '.log)', [file_get_contents($tmpName . '.log')]);
 			}
 
-			$this->dumpDebug($this);
 			$this->cleanupTempFiles($tmpName);
 			throw new \RuntimeException('Invalid formula');
 		}
@@ -147,6 +146,21 @@ class Renderer implements RendererInterface
 
 		$this->dumpDebug($cmd);
 		$this->dumpDebug($svgOutput);
+		if (!file_exists($tmpName . '.svg')) {
+			// Ohe has to figure out why the dvisvgm command has failed.
+			if ($this->logger !== null) {
+				$this->logger->error('Dvisvgm finished incorrectly', [
+					'command'                   => $cmd,
+					'dvisvgm output'            => $svgOutput,
+					"file_exists($tmpName.svg)" => file_exists($tmpName . '.svg'),
+				]);
+				$this->logger->error('source', [$texSource]);
+				$this->logger->error('trace (' . $tmpName . '.log)', [file_get_contents($tmpName . '.log')]);
+			}
+
+			$this->cleanupTempFiles($tmpName);
+			throw new \RuntimeException('Invalid formula');
+		}
 
 		$svgContent = SvgHelper::processSvgContent(file_get_contents($tmpName . '.svg'), $formulaObj->useBaseline());
 
