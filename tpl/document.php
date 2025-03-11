@@ -2,7 +2,7 @@
 
 /** @var bool $hasDvisvgmOption */
 /** @var string $documentContent */
-/** @var \S2\Tex\Tpl\PackageInterface[] $extraPackages */
+/** @var \S2\Tex\Tpl\PackageCollection $extraPackages */
 
 /**
  * \documentclass[11pt,dvisvgm]{standalone}
@@ -72,11 +72,9 @@
 \newunicodechar{ⱼ}{\ensuremath{{}_{j}}}
 
 <?php
-if (!empty($extraPackages)) {
-	foreach ($extraPackages as $package) {
-		echo $package->getCode(), "\n";
-	}
-}
+
+echo $extraPackages->getCode();
+
 ?>
 
 \pagestyle{empty}

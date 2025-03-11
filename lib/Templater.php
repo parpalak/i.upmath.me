@@ -11,6 +11,9 @@
 namespace S2\Tex;
 
 use S2\Tex\Tpl\Formula;
+use S2\Tex\Tpl\Package;
+use S2\Tex\Tpl\PackageCollection;
+use S2\Tex\Tpl\PreambleEntry;
 
 class Templater implements TemplaterInterface
 {
@@ -23,13 +26,11 @@ class Templater implements TemplaterInterface
 
 	/**
 	 * {@inheritdoc}
-	 * @noinspection OnlyWritesOnParameterInspection
-	 * @noinspection PhpArrayWriteIsNotUsedInspection
 	 */
 	public function run(string $formula): Formula
 	{
 		$isMathMode    = true;
-		$extraPackages = [];
+		$extraPackages = new PackageCollection();
 
 		// Check if there are used certain environments and include corresponding packages
 		$test_env = [
@@ -46,7 +47,7 @@ class Templater implements TemplaterInterface
 			if (str_contains($formula, '\\begin{' . $command . '}') || str_contains($formula, '\\begin{' . $command . '*}')) {
 				$isMathMode = false;
 				if ($env) {
-					$extraPackages[$env] = new Tpl\Package($env);
+					$extraPackages->add($env, new Package($env));
 				}
 			}
 		}
@@ -64,7 +65,7 @@ class Templater implements TemplaterInterface
 			if (str_contains($formula, $command . '{') || str_contains($formula, $command . '[') || str_contains($formula, $command . ' ')) {
 				$isMathMode = false; // TODO make an option
 				if ($env) {
-					$extraPackages[$env] = new Tpl\Package($env);
+					$extraPackages->add($env, new Package($env));
 				}
 			}
 		}
@@ -82,21 +83,31 @@ class Templater implements TemplaterInterface
 
 		foreach ($test_command as $command => $env) {
 			if (str_contains($formula, $command . '{') || str_contains($formula, $command . ' ')) {
-				$extraPackages[$env] = new Tpl\Package($env);
+				$extraPackages->add($env, new Package($env));
+			}
+		}
+
+		$testEntries = [
+			'\usetikzlibrary{hobby}', // the code of hobby must be included in preamble only
+		];
+
+		foreach ($testEntries as $entry) {
+			if (str_contains($formula, $entry)) {
+				$extraPackages->add($entry, new PreambleEntry($entry));
 			}
 		}
 
 		// Custom rules
 		if (str_contains($formula, '\\xymatrix') || str_contains($formula, '\\begin{xy}')) {
-			$extraPackages['xy'] = new Tpl\Package('xy', ['all']);
+			$extraPackages->add('xy', new Package('xy', ['all']));
 		}
 
 		if (preg_match('#[А-Яа-яЁё]#u', $formula)) {
-			$extraPackages['babel'] = new Tpl\Package('babel', ['russian']);
+			$extraPackages->add('babel', new Package('babel', ['russian']));
 		}
 
 		if (preg_match('#[\x{1100}-\x{11FF}\x{3130}-\x{318F}\x{A960}-\x{A97C}\x{AC00}-\x{D7AF}\x{D7B0}-\x{D7FF}\x{3200}-\x{321E}\x{3260}-\x{327F}]#u', $formula)) {
-			$extraPackages['kotex'] = new Tpl\Package('kotex');
+			$extraPackages->add('kotex', new Package('kotex'));
 		}
 
 		// Parse custom Upmath setup prefixes
