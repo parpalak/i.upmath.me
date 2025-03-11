@@ -38,7 +38,7 @@ $renderer
 	->setIsDebug($isDebug)
 ;
 
-$tester = new Tester($renderer, 'src/*.tex', '../www/test_out/');
+$tester = new Tester($renderer, 'src/*.tex', '../www/test_out/', SVG2PNG_COMMAND);
 $tester->run();
 
 echo "\n";
