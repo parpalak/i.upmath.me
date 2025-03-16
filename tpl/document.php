@@ -24,6 +24,12 @@
 \newcommand{\lt}{<}
 \newcommand{\gt}{>}
 
+% Conditional definitions
+\providecommand{\tg}{\operatorname{tg}}
+\providecommand{\ctg}{\operatorname{ctg}}
+\providecommand{\arctg}{\operatorname{arctg}}
+\providecommand{\arcctg}{\operatorname{arcctg}}
+
 \usepackage[verbose]{newunicodechar}
 
 \newunicodechar{¬}{\ensuremath{\neg}}
