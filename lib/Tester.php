@@ -48,6 +48,9 @@ readonly class Tester
 			$resultContent   = $this->convertSvgToPng($this->outDir . $fileName . '.svg');
 			$expectedContent = $this->convertSvgToPng($expectedDir . $fileName . '.svg');
 			if ($resultContent !== $expectedContent && ($diff = $this->diffPngImages($expectedContent, $resultContent)) > 0) {
+				file_put_contents($this->outDir . $fileName . '.expected.png',  $expectedContent);
+				file_put_contents($this->outDir . $fileName . '.result.png',  $resultContent);
+				file_put_contents($this->outDir . $fileName . '.diff.png',  $this->createDiffImage($expectedContent, $resultContent));
 				echo 'Failed: ', $fileName, "\n";
 				echo "\tDiff: ", $diff, "\n";
 //				echo "\tResult: ", file_get_contents($this->outDir . $fileName . '.svg'), "\n";
@@ -101,6 +104,48 @@ readonly class Tester
 
 		return $differentPixels / ($width1 * $height1);
 	}
+
+	private function createDiffImage(string $content1, string $content2): string
+	{
+		$image1 = imagecreatefromstring($content1);
+		$image2 = imagecreatefromstring($content2);
+
+		$width1  = imagesx($image1);
+		$height1 = imagesy($image1);
+		$width2  = imagesx($image2);
+		$height2 = imagesy($image2);
+
+		if ($width1 !== $width2 || $height1 !== $height2) {
+			return '';
+		}
+
+		$diffImage = imagecreatetruecolor($width1, $height1);
+
+		$black = imagecolorallocate($diffImage, 0, 0, 0);
+		$white = imagecolorallocate($diffImage, 255, 255, 255);
+
+		for ($x = 0; $x < $width1; $x++) {
+			for ($y = 0; $y < $height1; $y++) {
+				if (imagecolorat($image1, $x, $y) !== imagecolorat($image2, $x, $y)) {
+					imagesetpixel($diffImage, $x, $y, $white);
+				} else {
+					imagesetpixel($diffImage, $x, $y, $black);
+				}
+			}
+		}
+
+		ob_start();
+		imagepng($diffImage);
+		$diffContent = ob_get_contents();
+		ob_end_clean();
+
+		imagedestroy($image1);
+		imagedestroy($image2);
+		imagedestroy($diffImage);
+
+		return $diffContent;
+	}
+
 
 	private function clearOutDir(): void
 	{
