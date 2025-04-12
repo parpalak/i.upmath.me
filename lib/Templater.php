@@ -102,6 +102,10 @@ class Templater implements TemplaterInterface
 			$extraPackages->add('xy', new Package('xy', ['all']));
 		}
 
+		if (str_contains($formula, '>{') || str_contains($formula, '>{')) {
+			$extraPackages->add('array', new Package('array'));
+		}
+
 		if (preg_match('#[А-Яа-яЁё]#u', $formula)) {
 			$extraPackages->add('babel', new Package('babel', ['russian']));
 		}
