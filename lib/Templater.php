@@ -40,6 +40,7 @@ class Templater implements TemplaterInterface
 			'circuitikz'      => 'circuitikz',
 			'sequencediagram' => 'pgf-umlsd',
 			'prooftree'       => 'bussproofs',
+			'CJK'             => 'CJKutf8',
 			'align'           => '', // just turns math mode off
 		];
 
