@@ -1,7 +1,7 @@
 <?php
 /**
- * @copyright 2020-2022 Roman Parpalak
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @copyright 2020-2025 Roman Parpalak
+ * @license   https://opensource.org/license/mit MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
  */
@@ -26,16 +26,24 @@ class Request
 		$this->extension = $extension;
 	}
 
+	/**
+	 * @throws \RuntimeException
+	 */
 	public static function createFromUri(string $uri): self
 	{
 		$parts = explode('/', $uri, 3);
-		if (count($parts) < 3) {
-			throw new \InvalidArgumentException('Incorrect input format.');
+		if (\count($parts) < 3) {
+			throw new \RuntimeException('Incorrect input format.');
 		}
 
 		$extension = $parts[1];
-		$formula   = rawurldecode($parts[2]);
-		$formula   = trim($formula);
+		if ($extension === 'svgb' || $extension === 'pngb') {
+			$extension = substr($extension, 0, -1);
+			$formula   = self::decodeCompressedFormula($parts[2]);
+		} else {
+			$formula = rawurldecode($parts[2]);
+		}
+		$formula = trim($formula);
 
 		return new static($formula, $extension);
 	}
@@ -63,7 +71,7 @@ class Request
 	public function withExtension(string $extension): self
 	{
 		if (!self::extensionIsValid($extension)) {
-			throw new \InvalidArgumentException(sprintf('Unsupported extension "%s".', $extension));
+			throw new \InvalidArgumentException(\sprintf('Unsupported extension "%s".', $extension));
 		}
 		$result            = clone $this;
 		$result->extension = $extension;
@@ -74,5 +82,20 @@ class Request
 	private static function extensionIsValid(string $str): bool
 	{
 		return $str === self::SVG || $str === self::PNG;
+	}
+
+	/**
+	 * @throws \RuntimeException
+	 */
+	private static function decodeCompressedFormula(string $compressed): string
+	{
+		$base64     = strtr($compressed, '-_', '+/'); // URL-safe base64 to standard
+		$compressed = base64_decode($base64);
+
+		$result = @gzinflate($compressed);
+		if ($result === false) {
+			throw new \RuntimeException('Failed to decompress formula.');
+		}
+		return $result;
 	}
 }
