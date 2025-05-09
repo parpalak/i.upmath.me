@@ -87,7 +87,7 @@ class Request
 	/**
 	 * @throws \RuntimeException
 	 */
-	private static function decodeCompressedFormula(string $compressed): string
+	public static function decodeCompressedFormula(string $compressed): string
 	{
 		$base64     = strtr($compressed, '-_', '+/'); // URL-safe base64 to standard
 		$compressed = base64_decode($base64);

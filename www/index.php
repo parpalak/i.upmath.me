@@ -1,5 +1,8 @@
 <?php
 
+use S2\Tex\Processor\Request;
+
+require '../vendor/autoload.php';
 include 'samples.php';
 @include '../fingerprint.php';
 @include '../host.php';
@@ -26,7 +29,14 @@ function __ ($key) {
 
 if (str_starts_with($_SERVER['REQUEST_URI'], '/g/')) {
 	$editor_content = urldecode(substr($_SERVER['REQUEST_URI'], 3));
-} else {
+} elseif (str_starts_with($_SERVER['REQUEST_URI'], '/gb/')) {
+	try {
+		$editor_content = Request::decodeCompressedFormula(substr($_SERVER['REQUEST_URI'], 4));
+	} catch (RuntimeException $e) {
+		$editor_content = 'f(x)';
+	}
+}
+else {
 	$editor_content = 'f(x)';
 }
 

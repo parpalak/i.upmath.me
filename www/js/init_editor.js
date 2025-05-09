@@ -1,7 +1,7 @@
 // noinspection ES6ConvertVarToLetConst
 
 /**
- * Formula format watcher.
+ * Formula and format watcher.
  *
  * @type {{setFormat, setSource, getSource, setCallback, resetTimer}}
  */
@@ -51,14 +51,27 @@ function initTexEditor() {
 		oldOutput;
 
 	/**
-	 * Displays after 300ms the formula rendered.
+	 * Displays the rendered image after 300ms.
 	 *
 	 * @param text
 	 * @param format
 	 */
 	function timerTick(text, format) {
-		var encodedText = encodeURIComponent(text),
-			output = text ? serviceURL + format + '/' + encodedText : '';
+		var encodedResult = encodeFormula(text);
+
+		if (encodedResult && typeof encodedResult.then === 'function') {
+			// Promise in modern browsers
+			encodedResult.then(function(result) {
+				processEncodedResult(result, text, format);
+			});
+		} else {
+			processEncodedResult(encodedResult, text, format);
+		}
+	}
+
+	function processEncodedResult(encodedResult, text, format) {
+		var encodedText = encodedResult.text,
+			output = text ? serviceURL + format + encodedResult.postfix + '/' + encodedText : '';
 
 		if (output === oldOutput) {
 			return;
@@ -66,12 +79,50 @@ function initTexEditor() {
 		oldOutput = output;
 
 		document.forms['editor'].result.value = output;
-		preview.src = output;
-
+		preview.src = output !== '' ? output : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 		if (encodedText === 'f(x)' && location.pathname === '/') {
 			return;
 		}
-		history && history.replaceState && history.replaceState(null, '', '/g/' + encodedText);
+		history && history.replaceState && history.replaceState(null, '', '/g' + encodedResult.postfix + '/' + encodedText);
+	}
+
+	/**
+	 * Encodes formula to the deflate-compressed URL-safe Base64 if possible or to the URL-encoded.
+	 * @param {string} text
+	 * @returns {Promise<{postfix: string, text: string}> | {postfix: string, text: string}} - Object with the following properties:
+	 *   - postfix: 'b' if compressed or '' otherwise
+	 *   - text: compressed or URL-encoded formula
+	 */
+	function encodeFormula(text) {
+		var urlEncoded = encodeURIComponent(text),
+			defaultResult = { postfix: '', text: urlEncoded };
+
+		if (typeof CompressionStream !== 'function' ||
+			typeof Promise === 'undefined' ||
+			!Promise.prototype.then) {
+			return defaultResult;
+		}
+
+		try {
+			var promise = (async function() {
+				var stream = new Blob([text]).stream();
+				var compressedStream = stream.pipeThrough(new CompressionStream('deflate-raw'));
+				var compressedBlob = await new Response(compressedStream).blob();
+				var compressedArray = new Uint8Array(await compressedBlob.arrayBuffer());
+				return btoa(String.fromCharCode.apply(null, compressedArray))
+					.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+			})();
+
+			return promise.then(function (compressedBase64) {
+				return (compressedBase64.length + 1 < urlEncoded.length) ?
+					{postfix: 'b', text: compressedBase64} :
+					defaultResult;
+			}).catch(function () {
+				return defaultResult;
+			});
+		} catch (e) {
+			return defaultResult;
+		}
 	}
 
 	// Connect to the renderer

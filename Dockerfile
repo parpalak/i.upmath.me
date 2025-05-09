@@ -5,7 +5,7 @@ EXPOSE 80
 WORKDIR /var/www/i.upmath.me
 
 RUN apt-get update && apt-get -y --no-install-recommends install \
-    nginx-extras \
+    nginx-extras lua-zlib \
     zip unzip \
     php8.2-fpm \
     php8.2-curl \
