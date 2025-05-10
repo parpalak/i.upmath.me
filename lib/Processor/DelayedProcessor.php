@@ -1,7 +1,7 @@
 <?php
 /**
- * @copyright 2020-2023 Roman Parpalak
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @copyright 2020-2025 Roman Parpalak
+ * @license   https://opensource.org/license/mit MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
  */
@@ -38,6 +38,10 @@ class DelayedProcessor
 		return $this;
 	}
 
+	/**
+	 * @throws \JsonException
+	 * @throws \RuntimeException
+	 */
 	public function process(Request $request): void
 	{
 		if ($request->isSvg()) {
@@ -52,7 +56,15 @@ class DelayedProcessor
 			if (file_exists($filePath)) {
 				// Fallback way via executing shell commands in case if HTTP service is down.
 				foreach ($this->svgCommands as $pattern) {
-					$command = sprintf($pattern, $filePath);
+					if (str_contains($pattern, 'svgo')) {
+						// We need to add some workarounds to SVGO bugs
+						$svgContent = file_get_contents($filePath);
+						if ($svgContent === false || $this->shouldAvoidSVGO($svgContent)) {
+							continue;
+						}
+					}
+
+					$command = \sprintf($pattern, $filePath);
 					Helper::newRelicProfileDataStore(
 						static fn() => shell_exec($command),
 						'shell',
@@ -61,14 +73,13 @@ class DelayedProcessor
 				}
 			}
 
-
 			return;
 		}
 
 		if ($request->isPng()) {
 			// Optimizing PNG
 			foreach ($this->pngCommands as $pattern) {
-				$command = sprintf($pattern, $this->cacheProvider->cachePathFromRequest($request, false));
+				$command = \sprintf($pattern, $this->cacheProvider->cachePathFromRequest($request, false));
 				Helper::newRelicProfileDataStore(
 					static fn() => shell_exec($command),
 					'shell',
@@ -79,13 +90,16 @@ class DelayedProcessor
 			return;
 		}
 
-		throw new \InvalidArgumentException(sprintf(
+		throw new \InvalidArgumentException(\sprintf(
 			'Unknown type "%s" for delayed processing. [%s]',
 			$request->getExtension(),
 			var_export($request, true)
 		));
 	}
 
+	/**
+	 * @throws \RuntimeException
+	 */
 	private function optimizeSvgViaHttp(string $filePath): bool
 	{
 		$unoptimizedSvg = file_get_contents($filePath);
@@ -93,19 +107,23 @@ class DelayedProcessor
 			return false;
 		}
 
-		$context = stream_context_create(['http' => [
-			'method'  => 'POST',
-			'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
-			'content' => $unoptimizedSvg,
-		]]);
+		if ($this->shouldAvoidSVGO($unoptimizedSvg)) {
+			$optimizedSvg = $unoptimizedSvg;
+		} else {
+			$context = stream_context_create(['http' => [
+				'method'  => 'POST',
+				'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+				'content' => $unoptimizedSvg,
+			]]);
 
-		$optimizedSvg = Helper::newRelicProfileDataStore(
-			fn() => file_get_contents($this->httpSvgoUrl, false, $context),
-			'runtime',
-			'http-svgo'
-		);
-		if ($optimizedSvg === false) {
-			return false;
+			$optimizedSvg = Helper::newRelicProfileDataStore(
+				fn() => file_get_contents($this->httpSvgoUrl, false, $context),
+				'runtime',
+				'http-svgo'
+			);
+			if ($optimizedSvg === false) {
+				return false;
+			}
 		}
 
 		Helper::filePut($filePath, $optimizedSvg, true);
@@ -121,5 +139,14 @@ class DelayedProcessor
 		@unlink($filePath);
 
 		return true;
+	}
+
+	/**
+	 * Contains some logic to skip SVGO optimization if the file contains some known features
+	 * that cause SVGO to produce incorrect results.
+	 */
+	public function shouldAvoidSVGO(string $svgContent): bool
+	{
+		return str_contains($svgContent, 'animateTransform');
 	}
 }

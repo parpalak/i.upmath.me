@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
 /**
- * @copyright 2022 Roman Parpalak
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @copyright 2022-2025 Roman Parpalak
+ * @license   https://opensource.org/license/mit MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
  */
+
+declare(strict_types=1);
 
 namespace S2\Tex;
 
@@ -36,19 +38,21 @@ class Helper
 	 *
 	 * @param string $filename
 	 * @param string $content
-	 * @param bool   $overwriteExisting Optimization flag to unlink existing file first.
+	 * @param bool $overwriteExisting Optimization flag to unlink existing file first.
+	 *
+	 * @throws \RuntimeException
 	 */
 	public static function filePut(string $filename, string $content, bool $overwriteExisting = false): void
 	{
-		$dir = dirname($filename);
+		$dir = \dirname($filename);
 		if (!file_exists($dir) && !mkdir($dir, 0777, true) && !is_dir($dir)) {
-			throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+			throw new \RuntimeException(\sprintf('Directory "%s" was not created', $dir));
 		}
 
 		$tmpFilename = $filename . '.' . uniqid('', true) . '.temp';
 
 		if (file_put_contents($tmpFilename, $content, LOCK_EX) === false) {
-			throw new \RuntimeException(sprintf('Unable to write to file "%s"', $tmpFilename));
+			throw new \RuntimeException(\sprintf('Unable to write to file "%s"', $tmpFilename));
 		}
 
 		if ($overwriteExisting || !@rename($tmpFilename, $filename)) {
