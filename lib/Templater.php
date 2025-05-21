@@ -64,7 +64,7 @@ class Templater implements TemplaterInterface
 		];
 
 		foreach ($test_command as $command => $env) {
-			if (str_contains($formula, $command . '{') || str_contains($formula, $command . '[') || str_contains($formula, $command . ' ')) {
+			if (preg_match('#' . preg_quote($command, '#') . '[{\[\s\d\\\\]#', $formula)) {
 				$isMathMode = false; // TODO make an option
 				if ($env) {
 					$extraPackages->add($env, new Package($env));
@@ -84,7 +84,7 @@ class Templater implements TemplaterInterface
 		];
 
 		foreach ($test_command as $command => $env) {
-			if (str_contains($formula, $command . '{') || str_contains($formula, $command . ' ')) {
+			if (preg_match('#' . preg_quote($command, '#') . '[{\[\s\d\\\\]#', $formula)) {
 				$extraPackages->add($env, new Package($env));
 			}
 		}
