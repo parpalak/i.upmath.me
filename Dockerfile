@@ -1,4 +1,4 @@
-FROM ghcr.io/parpalak/upmath-texlive-docker:2023.0
+FROM ghcr.io/parpalak/upmath-texlive-docker:2025.0.1
 
 EXPOSE 80
 
