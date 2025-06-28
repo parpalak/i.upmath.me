@@ -62,6 +62,42 @@
 
 	var imgQueue = {}, aSizes = {};
 
+	function deflateRaw(text, callback) {
+		if (typeof CompressionStream === 'undefined') {
+			callback(null);
+			return;
+		}
+
+		try {
+			var stream = new Blob([text]).stream();
+			var compressedStream = stream.pipeThrough(new CompressionStream('deflate-raw'));
+
+			new Response(compressedStream).blob().then(function (compressedBlob) {
+				return compressedBlob.arrayBuffer();
+			}).then(function (buffer) {
+				var compressedArray = new Uint8Array(buffer);
+				var binary = Array.from(compressedArray).map(function (b) {
+					return String.fromCharCode(b);
+				}).join('');
+				var base64 = btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+				callback(base64);
+			}).catch(function () {
+				callback(null);
+			});
+		} catch (e) {
+			callback(null);
+		}
+	}
+
+	function getImgPath(formula, callback) {
+		var fallbackUrl = url + '/' + ext + '/' + encodeURIComponent(formula);
+
+		deflateRaw(formula, function (compressed) {
+			var shortUrl = compressed ? url + '/' + ext + 'b/' + compressed : null;
+			callback(shortUrl && shortUrl.length < fallbackUrl.length ? shortUrl : fallbackUrl);
+		});
+	}
+
 	function trackLoading(eImg, path, isCentered) {
 		if (!imgQueue[path]) {
 			imgQueue[path] = [[], []];
@@ -105,21 +141,22 @@
 	}
 
 	function createImgNode(formula, isCentered) {
-		var i = d.createElement('img'),
-			path = url + '/' + ext + '/' + encodeURIComponent(formula);
+		var i = d.createElement('img');
 
-		i.setAttribute('src', path);
 		i.setAttribute('class', 'latex-' + ext);
 		i.setAttribute('style', 'vertical-align:middle; border:0; opacity:0;');
 		i.setAttribute('alt', formula);
 
 		isCentered && (i.style.margin = '0 0 0 auto');
 
-		try {
-			trackLoading(i, path, isCentered);
-		} catch (e) {
-			i.style.opacity = '1';
-		}
+		getImgPath(formula, function(path) {
+			i.setAttribute('src', path);
+			try {
+				trackLoading(i, path, isCentered);
+			} catch (e) {
+				i.style.opacity = '1';
+			}
+		});
 
 		return i;
 	}
