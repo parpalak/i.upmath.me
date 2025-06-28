@@ -56,7 +56,9 @@ class Templater implements TemplaterInterface
 		// Check if there are used certain commands and include corresponding packages
 		$test_command = [
 			'\\addplot'             => 'pgfplots',
+			'\\addplot+'            => 'pgfplots',
 			'\\addplot3'            => 'pgfplots',
+			'\\addplot3+'           => 'pgfplots',
 			'\\smartdiagram'        => 'smartdiagram',
 			'\\DisplayProof'        => 'bussproofs',
 			'\\tdplotsetmaincoords' => 'tikz-3dplot',
