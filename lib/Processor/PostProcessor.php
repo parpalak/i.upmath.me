@@ -20,7 +20,7 @@ class PostProcessor
 		$this->cacheProvider = $cacheProvider;
 	}
 
-	public function cacheResponseAndGetAsyncRequest(Response $response, string $errorPayload): ?Request
+	public function cacheResponseAndGetAsyncRequest(Response $response): ?Request
 	{
 		$cacheName = $this->cacheProvider->cachePathFromRequest(
 			$response->getRequest(),
@@ -29,7 +29,7 @@ class PostProcessor
 
 		$content = $response->getContent();
 		if ($response->hasError()) {
-			$content = $errorPayload . ' ' . $response->getRequest()->getExtension() . ': ' . $content;
+			$content = 'Invalid formula';
 		}
 
 		Helper::filePut($cacheName, $content);

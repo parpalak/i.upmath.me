@@ -45,7 +45,7 @@ class Helper
 	public static function filePut(string $filename, string $content, bool $overwriteExisting = false): void
 	{
 		$dir = \dirname($filename);
-		if (!file_exists($dir) && !mkdir($dir, 0777, true) && !is_dir($dir)) {
+		if (!file_exists($dir) && !mkdir($dir, 0770, true) && !is_dir($dir)) {
 			throw new \RuntimeException(\sprintf('Directory "%s" was not created', $dir));
 		}
 

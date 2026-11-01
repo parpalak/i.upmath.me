@@ -82,7 +82,7 @@ if (!$isDebug && !($response instanceof CachedResponse)) {
 	fastcgi_finish_request();
 
 	$postProc     = new PostProcessor($cacheProvider);
-	$asyncRequest = $postProc->cacheResponseAndGetAsyncRequest($response, $_SERVER['HTTP_REFERER'] ?? 'no referer');
+	$asyncRequest = $postProc->cacheResponseAndGetAsyncRequest($response);
 	if ($asyncRequest !== null) {
 		$connection = new UnixDomainSocket(FASTCGI_SOCKET, 1000, 1000);
 		$client     = new Client();

@@ -7,7 +7,6 @@
  */
 
 define('TEX_PATH', '/usr/local/texlive/${tlversion}/bin/x86_64-linux/');
-define('SVGO_PATH', __DIR__ . '/node_modules/svgo/bin');
 
 /**
  * Setting up directories

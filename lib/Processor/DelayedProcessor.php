@@ -13,8 +13,6 @@ use S2\Tex\Helper;
 
 class DelayedProcessor
 {
-	private array $svgCommands = [];
-	private array $pngCommands = [];
 	private CacheProvider $cacheProvider;
 	private string $httpSvgoUrl;
 
@@ -24,20 +22,6 @@ class DelayedProcessor
 		$this->httpSvgoUrl   = $httpSvgoUrl;
 	}
 
-	public function addSVGCommand(string $command): self
-	{
-		$this->svgCommands[] = $command;
-
-		return $this;
-	}
-
-	public function addPNGCommand(string $command): self
-	{
-		$this->pngCommands[] = $command;
-
-		return $this;
-	}
-
 	/**
 	 * @throws \JsonException
 	 * @throws \RuntimeException
@@ -45,48 +29,13 @@ class DelayedProcessor
 	public function process(Request $request): void
 	{
 		if ($request->isSvg()) {
-			// Optimizing SVG
 			$filePath = $this->cacheProvider->cachePathFromRequest($request, false);
-
-			if ($this->optimizeSvgViaHttp($filePath)) {
-				// We've optimized SVG via HTTP service, everything is fine.
-				return;
-			}
-
-			if (file_exists($filePath)) {
-				// Fallback way via executing shell commands in case if HTTP service is down.
-				foreach ($this->svgCommands as $pattern) {
-					if (str_contains($pattern, 'svgo')) {
-						// We need to add some workarounds to SVGO bugs
-						$svgContent = file_get_contents($filePath);
-						if ($svgContent === false || $this->shouldAvoidSVGO($svgContent)) {
-							continue;
-						}
-					}
-
-					$command = \sprintf($pattern, $filePath);
-					Helper::newRelicProfileDataStore(
-						static fn() => shell_exec($command),
-						'shell',
-						Helper::getShortCommandName($command)
-					);
-				}
-			}
+			$this->optimizeSvgViaHttp($filePath);
 
 			return;
 		}
 
 		if ($request->isPng()) {
-			// Optimizing PNG
-			foreach ($this->pngCommands as $pattern) {
-				$command = \sprintf($pattern, $this->cacheProvider->cachePathFromRequest($request, false));
-				Helper::newRelicProfileDataStore(
-					static fn() => shell_exec($command),
-					'shell',
-					Helper::getShortCommandName($command)
-				);
-			}
-
 			return;
 		}
 
@@ -112,8 +61,9 @@ class DelayedProcessor
 		} else {
 			$context = stream_context_create(['http' => [
 				'method'  => 'POST',
-				'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+				'header'  => "Content-Type: image/svg+xml\r\n",
 				'content' => $unoptimizedSvg,
+				'timeout' => 5,
 			]]);
 
 			$optimizedSvg = Helper::newRelicProfileDataStore(

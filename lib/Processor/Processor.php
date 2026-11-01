@@ -61,7 +61,7 @@ class Processor
 			$content    = $this->renderer->run($request->getFormula(), $request->getExtension());
 
 			return new Response($request, $content, $modifiedAt);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			return new Response($request, '', null, $e->getMessage());
 		}
 	}
