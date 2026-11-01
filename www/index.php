@@ -87,7 +87,7 @@ foreach ($langLinks as $linkLang => $linkUrl) {
 			<h2><?php echo __('equation editor'); ?></h2>
 			<form name="editor">
 				<p>
-					<textarea class="editor-text" name="source" rows="5" placeholder="<?php echo __('formula in latex'); ?>"><?php echo $editor_content; ?></textarea>
+					<textarea class="editor-text" name="source" rows="5" placeholder="<?php echo __('formula in latex'); ?>"><?php echo htmlspecialchars($editor_content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></textarea>
 					<br />
 					<label><input type="radio" name="format" id="svg_radio" value="svg" checked />SVG</label>
 					<label><input type="radio" name="format" value="png" />PNG</label>

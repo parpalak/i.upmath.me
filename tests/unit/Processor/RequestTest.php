@@ -40,6 +40,31 @@ class RequestTest extends Unit
 		new Request('1+1', 'jpg');
 	}
 
+	public function testConstructorRejectsOversizedFormula(): void
+	{
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Formula is too long.');
+
+		new Request(str_repeat('x', Request::MAX_FORMULA_LENGTH + 1), Request::SVG);
+	}
+
+	public function testCompressedFormulaRejectsInvalidBase64(): void
+	{
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('Failed to decode formula.');
+
+		Request::decodeCompressedFormula('***');
+	}
+
+	public function testCompressedFormulaRejectsOversizedOutput(): void
+	{
+		$compressed = gzdeflate(str_repeat('x', Request::MAX_FORMULA_LENGTH + 1));
+		$encoded = rtrim(strtr(base64_encode($compressed), '+/', '-_'), '=');
+
+		$this->expectException(\RuntimeException::class);
+		Request::decodeCompressedFormula($encoded);
+	}
+
 	/**
 	 * @dataProvider validUriDataProvider
 	 * @throws ExpectationFailedException

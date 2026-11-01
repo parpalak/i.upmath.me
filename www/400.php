@@ -2,7 +2,7 @@
 <head><title>400 Bad Request</title></head>
 <body bgcolor="white">
 <h1>400 Bad Request</h1>
-<hr><?php echo $error; ?>
+<hr><?php echo htmlspecialchars((string) $error, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
 </body>
 </html>
 <!-- a padding to disable MSIE and Chrome friendly error page -->

@@ -10,6 +10,8 @@ namespace S2\Tex\Processor;
 
 class Request
 {
+	public const MAX_FORMULA_LENGTH = 100000;
+
 	public const SVG = 'svg';
 	public const PNG = 'png';
 
@@ -18,6 +20,10 @@ class Request
 
 	public function __construct(string $formula, string $extension)
 	{
+		if (strlen($formula) > self::MAX_FORMULA_LENGTH) {
+			throw new \InvalidArgumentException('Formula is too long.');
+		}
+
 		if (!self::extensionIsValid($extension)) {
 			throw new \InvalidArgumentException('Incorrect output format has been requested. Expected SVG or PNG.');
 		}
@@ -90,11 +96,17 @@ class Request
 	public static function decodeCompressedFormula(string $compressed): string
 	{
 		$base64     = strtr($compressed, '-_', '+/'); // URL-safe base64 to standard
-		$compressed = base64_decode($base64);
+		$compressed = base64_decode($base64, true);
+		if ($compressed === false) {
+			throw new \RuntimeException('Failed to decode formula.');
+		}
 
-		$result = @gzinflate($compressed);
+		$result = @gzinflate($compressed, self::MAX_FORMULA_LENGTH + 1);
 		if ($result === false) {
 			throw new \RuntimeException('Failed to decompress formula.');
+		}
+		if (strlen($result) > self::MAX_FORMULA_LENGTH) {
+			throw new \RuntimeException('Formula is too long.');
 		}
 		return $result;
 	}
