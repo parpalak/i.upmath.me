@@ -73,14 +73,19 @@ class Renderer implements RendererInterface
 	{
 		$this->validateFormula($formula);
 
-		$tmpName = tempnam($this->tmpDir, '');
-
 		$formulaObj = $this->templater->run($formula);
 		$texSource  = $formulaObj->getText();
 		$this->echoDebug(htmlspecialchars($texSource));
 
+		// Each render gets its own private directory.
+		$workDir = $this->createWorkDir();
+		$tmpName = $workDir . '/formula';
+
 		// Latex
-		file_put_contents($tmpName, $texSource);
+		if (file_put_contents($tmpName, $texSource) === false) {
+			$this->cleanupWorkDir($workDir);
+			throw new \RuntimeException('Cannot write the temporary Latex source.');
+		}
 
 		/**
 		 * Adding the TeX bin directory (e.g. `/home/tex/tl-2020/bin/x86_64-linux`) to the PATH environment variable.
@@ -88,7 +93,13 @@ class Renderer implements RendererInterface
 		 *
 		 * See https://github.com/symfony/symfony/issues/5030 for 'exec' hack
 		 */
-		$process = Process::fromShellCommandline('PATH="$PATH:' . $this->texPath . '" exec ' . $this->latexCommand . ' ' . $tmpName . ' 2>&1');
+		$process = Process::fromShellCommandline(
+			'PATH="$PATH:' . $this->texPath . '" exec ' . $this->latexCommand
+			. ' -no-shell-escape -output-directory=' . escapeshellarg($workDir)
+			. ' formula 2>&1',
+			$workDir,
+			self::texSecurityEnvironment($workDir)
+		);
 		$process->setTimeout(8);
 
 		try {
@@ -107,7 +118,7 @@ class Renderer implements RendererInterface
 				]);
 			}
 			$this->dumpDebug($texSource);
-			$this->cleanupTempFiles($tmpName);
+			$this->cleanupWorkDir($workDir);
 
 			throw $e;
 		}
@@ -132,7 +143,7 @@ class Renderer implements RendererInterface
 				$this->logger->error('trace (' . $tmpName . '.log)', [file_get_contents($tmpName . '.log')]);
 			}
 
-			$this->cleanupTempFiles($tmpName);
+			$this->cleanupWorkDir($workDir);
 			throw new \RuntimeException('Invalid formula');
 		}
 
@@ -158,7 +169,7 @@ class Renderer implements RendererInterface
 				$this->logger->error('trace (' . $tmpName . '.log)', [file_get_contents($tmpName . '.log')]);
 			}
 
-			$this->cleanupTempFiles($tmpName);
+			$this->cleanupWorkDir($workDir);
 			throw new \RuntimeException('Invalid formula');
 		}
 
@@ -181,15 +192,56 @@ class Renderer implements RendererInterface
 		}
 
 		// Cleaning up
-		$this->cleanupTempFiles($tmpName);
+		$this->cleanupWorkDir($workDir);
 
 		return $type === 'png' ? $pngContent : $svgContent;
 	}
 
-	private function cleanupTempFiles($tmpName): void
+	private static function texSecurityEnvironment(string $workDir): array
 	{
+		return [
+			'openin_any'   => 'p',
+			'openout_any'  => 'p',
+			'shell_escape' => 'f',
+			'TEXMFOUTPUT'  => $workDir,
+		];
+	}
+
+	private function createWorkDir(): string
+	{
+		$baseDir = realpath($this->tmpDir);
+		if ($baseDir === false) {
+			throw new \RuntimeException('Temporary directory does not exist.');
+		}
+		for ($attempt = 0; $attempt < 5; $attempt++) {
+			$workDir = $baseDir . '/render-' . bin2hex(random_bytes(12));
+			if (@mkdir($workDir, 0700)) {
+				return $workDir;
+			}
+		}
+
+		throw new \RuntimeException('Cannot create a temporary directory.');
+	}
+
+	/**
+	 * Unexpected files are kept for manual inspection.
+	 */
+	private function cleanupWorkDir(string $workDir): void
+	{
+		$tmpName = $workDir . '/formula';
 		foreach (['', '.log', '.aux', '.dvi', '.svg', '.png'] as $ext) {
 			@unlink($tmpName . $ext);
+		}
+
+		if (@rmdir($workDir)) {
+			return;
+		}
+
+		if ($this->logger !== null) {
+			$this->logger->warning('Unexpected files left in the temporary directory', [
+				'dir'   => $workDir,
+				'files' => array_values(array_diff(scandir($workDir) ?: [], ['.', '..'])),
+			]);
 		}
 	}
 

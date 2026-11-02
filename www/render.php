@@ -28,7 +28,7 @@ $isDebug = defined('DEBUG') && DEBUG;
 error_reporting($isDebug ? E_ALL : -1);
 
 // Setting up external commands
-define('LATEX_COMMAND', TEX_PATH . 'latex -output-directory=' . TMP_DIR);
+define('LATEX_COMMAND', TEX_PATH . 'latex');
 define('DVISVG_COMMAND', TEX_PATH . 'dvisvgm %1$s -o %1$s.svg -n --exact -v0 --relative --zoom=' . OUTER_SCALE);
 // define('DVIPNG_COMMAND', TEX_PATH . 'dvipng -T tight %1$s -o %1$s.png -D ' . (96 * OUTER_SCALE)); // outdated
 define('SVG2PNG_COMMAND', 'rsvg-convert %1$s -d 96 -p 96 -b white'); // stdout

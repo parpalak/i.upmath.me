@@ -23,7 +23,7 @@ error_reporting(E_ALL);
 $tmpDir = 'tmp/';
 
 // Setting up external commands
-define('LATEX_COMMAND', TEX_PATH . 'latex -output-directory=' . $tmpDir);
+define('LATEX_COMMAND', TEX_PATH . 'latex');
 define('DVISVG_COMMAND', TEX_PATH . 'dvisvgm %1$s -o %1$s.svg -n --exact -v0 --zoom=' . OUTER_SCALE);
 // define('DVIPNG_COMMAND', TEX_PATH.'dvipng -T tight %1$s -o %1$s.png -D '.(96 * OUTER_SCALE)); // outdated
 define('SVG2PNG_COMMAND', 'rsvg-convert %1$s -d 96 -p 96 -b white'); // stdout

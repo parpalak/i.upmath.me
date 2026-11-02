@@ -24,7 +24,7 @@ error_reporting(E_ALL);
 $tmpDir = 'tmp/';
 
 // Setting up external commands
-define('LATEX_COMMAND', TEX_PATH . 'latex -output-directory=' . $tmpDir);
+define('LATEX_COMMAND', TEX_PATH . 'latex');
 define('DVISVG_COMMAND', TEX_PATH . 'dvisvgm %1$s -o %1$s.svg -n --exact -v0 --zoom=' . OUTER_SCALE);
 define('SVG2PNG_COMMAND', 'rsvg-convert %1$s -z 4 -b white'); // stdout, 4x zoom
 
