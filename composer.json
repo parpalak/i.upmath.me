@@ -13,7 +13,7 @@
         "php": "^8.2",
         "ext-zlib": "*",
         "katzgrau/klogger": "^1.2",
-        "symfony/process": "^5.3",
+        "symfony/process": "^7.4",
         "hollodotme/fast-cgi-client": "^3.1"
     },
     "config": {
