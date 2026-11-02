@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2014-2022 Roman Parpalak
+ * @copyright 2014-2026 Roman Parpalak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @package   Upmath Latex Renderer
  * @link      https://i.upmath.me
@@ -114,7 +114,7 @@ class Renderer implements RendererInterface
 				$this->logger->error($message, [
 					'message' => $e->getMessage(),
 					'command' => $process->getCommandLine(),
-					'source'  => $texSource,
+					'formula' => self::shorten($formula),
 				]);
 			}
 			$this->dumpDebug($texSource);
@@ -131,6 +131,17 @@ class Renderer implements RendererInterface
 		}
 
 		if (!file_exists($tmpName . '.dvi')) {
+			$texError = self::extractTexError((string)@file_get_contents($tmpName . '.log'));
+			if ($texError !== null) {
+				// An error in the formula itself, nothing to investigate.
+				if ($this->logger !== null) {
+					$this->logger->notice(self::oneLine('Invalid formula: ' . $texError . ' | ' . self::shorten($formula)));
+				}
+
+				$this->cleanupWorkDir($workDir);
+				throw new \RuntimeException('Invalid formula');
+			}
+
 			// Ohe has to figure out why the process was killed and why no dvi-file has been created.
 			if ($this->logger !== null) {
 				$this->logger->error('Latex finished incorrectly', [
@@ -140,7 +151,7 @@ class Renderer implements RendererInterface
 					"file_exists($tmpName.dvi)" => file_exists($tmpName . '.dvi'),
 				]);
 				$this->logger->error('source', [$texSource]);
-				$this->logger->error('trace (' . $tmpName . '.log)', [file_get_contents($tmpName . '.log')]);
+				$this->logger->error('trace (' . $tmpName . '.log)', [@file_get_contents($tmpName . '.log')]);
 			}
 
 			$this->cleanupWorkDir($workDir);
@@ -166,7 +177,7 @@ class Renderer implements RendererInterface
 					"file_exists($tmpName.svg)" => file_exists($tmpName . '.svg'),
 				]);
 				$this->logger->error('source', [$texSource]);
-				$this->logger->error('trace (' . $tmpName . '.log)', [file_get_contents($tmpName . '.log')]);
+				$this->logger->error('trace (' . $tmpName . '.log)', [@file_get_contents($tmpName . '.log')]);
 			}
 
 			$this->cleanupWorkDir($workDir);
@@ -195,6 +206,32 @@ class Renderer implements RendererInterface
 		$this->cleanupWorkDir($workDir);
 
 		return $type === 'png' ? $pngContent : $svgContent;
+	}
+
+	/**
+	 * Returns the first error message from a Latex log up to the "l.<number>" line with the error location, if any.
+	 */
+	public static function extractTexError(string $log): ?string
+	{
+		$lines = explode("\n", $log);
+		foreach ($lines as $i => $line) {
+			if (!str_starts_with($line, '!')) {
+				continue;
+			}
+
+			$errorLines = \array_slice($lines, $i, 6);
+			foreach ($errorLines as $j => $errorLine) {
+				if (preg_match('#^l\.\d+ #', $errorLine) === 1) {
+					// The location line is wrapped, the next line contains the rest of the input.
+					$errorLines = \array_slice($errorLines, 0, $j + 2);
+					break;
+				}
+			}
+
+			return self::shorten(implode(' ', $errorLines), 500);
+		}
+
+		return null;
 	}
 
 	private static function texSecurityEnvironment(string $workDir): array
@@ -245,6 +282,16 @@ class Renderer implements RendererInterface
 		}
 	}
 
+	private static function shorten(string $text, int $maxLength = 2000): string
+	{
+		return \strlen($text) > $maxLength ? substr($text, 0, $maxLength) . '...' : $text;
+	}
+
+	private static function oneLine(string $text): string
+	{
+		return preg_replace('#\s+#', ' ', $text) ?? $text;
+	}
+
 	/**
 	 * @param mixed $output
 	 */
@@ -271,7 +318,7 @@ class Renderer implements RendererInterface
 		foreach (['\\write', '\\input', '\\usepackage', '\\special', '\\include'] as $disabledCommand) {
 			if (strpos($formula, $disabledCommand) !== false) {
 				if ($this->logger !== null) {
-					$this->logger->error(sprintf('Forbidden command "%s": ', $disabledCommand), [$formula]);
+					$this->logger->error(self::oneLine(sprintf('Forbidden command "%s": ', $disabledCommand) . self::shorten($formula)));
 					$this->logger->error('Server vars: ', $_SERVER);
 				}
 				throw new \RuntimeException('Forbidden commands.');
@@ -280,7 +327,7 @@ class Renderer implements RendererInterface
 
 		if (preg_match('#{\\s*filecontents\\s*\\*?\\s*}#', $formula) === 1) {
 			if ($this->logger !== null) {
-				$this->logger->error(sprintf('Forbidden command "%s": ', 'filecontents'), [$formula]);
+				$this->logger->error(self::oneLine('Forbidden command "filecontents": ' . self::shorten($formula)));
 				$this->logger->error('Server vars: ', $_SERVER);
 			}
 			throw new \RuntimeException('Forbidden commands.');
